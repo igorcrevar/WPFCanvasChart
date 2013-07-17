@@ -1,0 +1,29 @@
+﻿<Window x:Class="WpfApplication1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Width="800" Height="600">
+    <Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+
+		<ToolBar Margin="0">
+			<ToggleButton Content="Small/Big" ToolTip="Small or big" Click="ToggleButton_Click"/>
+            <ToggleButton Name="ZoomBothAtSameTime" Content="Zoom both X and Y at same time" ToolTip="... or zoom only Y with ctrl + mouse wheel and mouse wheel only for x zoom" Click="ZoomBothAtSameTime_Click"/>
+            <ToggleButton Name="AreGridEnabledButton" Content="Are Grids Enabled" Click="AreGridEnabledButton_Click"/>
+		</ToolBar>
+
+		<Viewbox Stretch="Fill" Grid.Row="1">
+			<Canvas Name="Canvas" Width="350" Height="190" />
+		</Viewbox>
+		
+		<ScrollBar Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Name="HorizScroll" />
+		<ScrollBar Orientation="Vertical" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Stretch" Name="VertScroll" />
+	</Grid>
+</Window>
