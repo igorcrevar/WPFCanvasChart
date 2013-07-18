@@ -25,8 +25,8 @@ namespace IgorCrevar.WPFCanvasChart
             PenForAxis = new Pen(Brushes.Black, 0.5);
             BrushBackground = (Brush)new BrushConverter().ConvertFrom("#DDDDDDDD");
             BrushForText = (Brush)new BrushConverter().ConvertFrom("#FF000000");
-            MaxXZoomStep = 20.0f;
-            MaxYZoomStep = 20.0f;
+            MaxXZoomStep = 40.0f;
+            MaxYZoomStep = 40.0f;
             ZoomXYAtSameTime = false;
             AreGridsEnabled = true;
             ChartBackgroundBrush = Brushes.White;

@@ -44,8 +44,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interpolators\WPFCanvasChartBasicInterpolators.cs" />
+    <Compile Include="Interpolators\IWPFCanvasChartInterpolator.cs" />
     <Compile Include="WPFCanvasChart.cs" />
-    <Compile Include="ChartTypes\WPFCanvasChartIntegerXAxis.cs" />
     <Compile Include="WPFCanvasChartSettings.cs" />
     <Compile Include="IWPFCanvasChartDrawer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

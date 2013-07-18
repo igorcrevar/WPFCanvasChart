@@ -10,7 +10,7 @@ extend base class and allow binding
 
 #### How to use?
 Its easy! Just look at test project. Also:
-- Before using, instance of WPFCanvasChart (or subclass WPFCanvasChartIntegerXAxis) must be created
+- Before using, instance of WPFCanvasChart must be created
 - after that, you must set min/max x/y of your chart values using WPFCanvasChart  instance SetMinMax method
 - you must implement IWPFCanvasChartDrawer interface
 - draw call on WPFCanvasChart instance will draw chart(step above must be executed before drawing!)

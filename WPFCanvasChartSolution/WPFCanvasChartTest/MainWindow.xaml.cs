@@ -13,7 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
 using IgorCrevar.WPFCanvasChart;
-using IgorCrevar.WPFCanvasChart.ChartTypes;
+using IgorCrevar.WPFCanvasChart.Interpolators;
 
 namespace WpfApplication1
 {
@@ -136,7 +136,8 @@ namespace WpfApplication1
                 cc.Dispose();
             }
 
-            cc = new WPFCanvasChartIntegerXAxis(this.Canvas, HorizScroll, VertScroll, this, settings);
+            cc = new WPFCanvasChart(this.Canvas, HorizScroll, VertScroll, this, settings, 
+                new WPFCanvasChartIntInterpolator(), new WPFCanvasChartFloatInterpolator());
             SetMinMax();
             cc.DrawChart();
         }

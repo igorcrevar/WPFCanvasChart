@@ -9,6 +9,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows;
 using IgorCrevar.WPFCanvasChart.Internals;
+using IgorCrevar.WPFCanvasChart.Interpolators;
 
 namespace IgorCrevar.WPFCanvasChart
 {
@@ -42,6 +43,8 @@ namespace IgorCrevar.WPFCanvasChart
 
         private bool yZoomEnabled;
         private WPFCanvasChartSettings settings;
+        private IWPFCanvasChartInterpolator yAxisInterpolator;
+        private IWPFCanvasChartInterpolator xAxisInterpolator;
 
         /// <summary>
         /// Constructor
@@ -52,7 +55,7 @@ namespace IgorCrevar.WPFCanvasChart
         /// <param name="drawer">ICustomChartCanvasDrawer implementator. This object will implement actual chart drawing(lines, etc)</param>
         /// <param name="settings">WPFCanvasChartSettings instance - settings for chart</param>
         public WPFCanvasChart(Canvas canvas, ScrollBar horizScrollBar, ScrollBar vertScrollBar, IWPFCanvasChartDrawer drawer,
-            WPFCanvasChartSettings settings)
+            WPFCanvasChartSettings settings, IWPFCanvasChartInterpolator xAxisInterpolator, IWPFCanvasChartInterpolator yAxisInterpolator)
         {
             this.canvas = canvas;
             this.drawer = drawer;
@@ -60,6 +63,8 @@ namespace IgorCrevar.WPFCanvasChart
             this.horizScrollBar = horizScrollBar;
             this.vertScrollBar = vertScrollBar;
             this.yZoomEnabled = vertScrollBar != null;
+            this.xAxisInterpolator = xAxisInterpolator;
+            this.yAxisInterpolator = yAxisInterpolator;
 
             chartHost.Drawing.Transform = chartTransform;
 
@@ -422,11 +427,7 @@ namespace IgorCrevar.WPFCanvasChart
 
         protected virtual void DrawXAxis(DrawingContext ctx, DrawingContext chartCtx)
         {
-            // greater zoom has more steps
-            int noOfSteps = GetNoOfStepsForXAxis();
-            double valueStep = Math.Abs(maxX - minX) / noOfSteps;
-            double currentValue = minX + valueStep;
-            for (int i = 0; i <= noOfSteps; ++i)
+            xAxisInterpolator.Execute(minX, maxX, GetNoOfStepsForXAxis(), (currentValue) =>
             {
                 var currentPosition = Point2ChartPoint(new Point(currentValue, 0.0));
                 DrawVerticalGrid(chartCtx, currentPosition.X);
@@ -435,19 +436,12 @@ namespace IgorCrevar.WPFCanvasChart
                 {
                     DrawXAxisText(ctx, currentValue, currentPosition.X);
                 }
-
-                // update
-                currentValue += valueStep;
-            }
+            });
         }
 
         protected virtual void DrawYAxis(DrawingContext ctx, DrawingContext chartCtx)
         {
-            // greater zoom has more steps
-            int noOfSteps = GetNoOfStepsForYAxis();
-            double valueStep = Math.Abs(maxY - minY) / noOfSteps;
-            double currentValue = maxY;
-            for (int i = 0; i <= noOfSteps; ++i)
+            yAxisInterpolator.Execute(minY, maxY, GetNoOfStepsForYAxis(), (currentValue) =>
             {
                 var currentPosition = Point2ChartPoint(new Point(0.0, currentValue));
                 DrawHorizontalGrid(chartCtx, currentPosition.Y);
@@ -457,10 +451,7 @@ namespace IgorCrevar.WPFCanvasChart
                     // draw axis value at current step
                     DrawYAxisText(ctx, currentValue, currentPosition.Y);
                 }
-
-                // update
-                currentValue -= valueStep;
-            }
+            });
         }
 
         /// <summary>
