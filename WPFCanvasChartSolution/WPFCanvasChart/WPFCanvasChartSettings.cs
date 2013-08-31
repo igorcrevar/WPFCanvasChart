@@ -18,11 +18,11 @@ namespace IgorCrevar.WPFCanvasChart
         {
             CoordXSteps = 10;
             CoordYSteps = 5;
-            FontSize = 3;
+            FontSize = 9;
             Language = "en-us";
             FontName = "Verdana";
-            PenForGrid = new Pen(Brushes.Black, 0.15);
-            PenForAxis = new Pen(Brushes.Black, 0.5);
+            PenForGrid = new Pen((Brush)new BrushConverter().ConvertFromString("#66000000"), 1);
+            PenForAxis = new Pen((Brush)new BrushConverter().ConvertFromString("#CC000000"), 1);
             BrushBackground = (Brush)new BrushConverter().ConvertFrom("#DDDDDDDD");
             BrushForText = (Brush)new BrushConverter().ConvertFrom("#FF000000");
             MaxXZoomStep = 40.0f;

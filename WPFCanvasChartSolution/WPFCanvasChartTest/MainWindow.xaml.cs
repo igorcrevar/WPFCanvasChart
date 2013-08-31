@@ -22,11 +22,16 @@ namespace WpfApplication1
     /// </summary>
     partial class MainWindow : Window, IWPFCanvasChartDrawer
     {
+        enum ChartType
+        {
+            None, Big, Small, Bar
+        };
+
         private WPFCanvasChart cc = null;
-        private bool isSmallActive = true;
         private List<Point> pointsList = new List<Point>();
         private Pen pen = new Pen(Brushes.Red, 1);
         private WPFCanvasChartSettings settings;
+        private ChartType chartType = ChartType.None;
 
         public MainWindow()
         {
@@ -37,41 +42,66 @@ namespace WpfApplication1
             settings.MaxYZoomStep = 200.0f;
             pen.Freeze();
             GeneratePointsList();
+            this.Loaded += (sender, e) =>
+            {
+                // chart must created after all UI elements are loaded (canvas, scroll bars, etc...)
+                cc = new WPFCanvasChart(this.Canvas, HorizScroll, VertScroll, this, settings,
+                                        new WPFCanvasChartIntInterpolator(), new WPFCanvasChartFloatInterpolator());
+                SetMinMax();
+                cc.DrawChart();
+            };
+
+            this.Closed += (sender, e) =>
+            {
+                cc.Dispose();
+            };
         }
 
         private void SetMinMax()
         {
-            if (isSmallActive)
+            switch (chartType)
             {
-                cc.SetMinMax(2, 10, -5, 11.5);
-            }
-            else
-            {
-                double minX = pointsList[0].X;
-                double maxX = pointsList[0].X;
-                double minY = pointsList[0].Y;
-                double maxY = pointsList[0].Y;
-                foreach (var point in pointsList)
-                {
-                    minX = Math.Min(minX, point.X);
-                    maxX = Math.Max(maxX, point.X);
-                    minY = Math.Min(minY, point.Y);
-                    maxY = Math.Max(maxY, point.Y);
-                }
+                case ChartType.Small:
+                    cc.SetMinMax(2, 10, -5, 11.5);
+                    break;
+                case ChartType.Big:
+                    double minX = pointsList[0].X;
+                    double maxX = pointsList[0].X;
+                    double minY = pointsList[0].Y;
+                    double maxY = pointsList[0].Y;
+                    foreach (var point in pointsList)
+                    {
+                        minX = Math.Min(minX, point.X);
+                        maxX = Math.Max(maxX, point.X);
+                        minY = Math.Min(minY, point.Y);
+                        maxY = Math.Max(maxY, point.Y);
+                    }
 
-                cc.SetMinMax(minX, maxX, minY, maxY);
+                    cc.SetMinMax(minX, maxX, minY, maxY);
+                    break;
+                case ChartType.Bar:
+                    break;
+                default:
+                    cc.SetMinMax(-5, 5, -10, 10);
+                    break;
             }
         }
 
         public void Draw(DrawingContext ctx)
         {
-            if (isSmallActive)
+            switch (chartType)
             {
-                DrawSmall(ctx);
-            }
-            else
-            {
-                DrawBig(ctx);
+                case ChartType.Small:
+                    DrawSmall(ctx);
+                    break;
+                case ChartType.Big:
+                    DrawBig(ctx);
+                    break;
+                case ChartType.Bar:
+                    break;
+                default:
+                    // do nothing
+                    break;
             }
         }
 
@@ -116,28 +146,16 @@ namespace WpfApplication1
         private void GeneratePointsList()
         {
             var rnd = new Random();
-            int count = rnd.Next(8000) + 5000;
+            int count = rnd.Next(1000) + 5000;
+            int startX = rnd.Next(100) - 50;
             for (int i = 0; i < count; ++i)
             {
-                pointsList.Add(new Point(i, rnd.NextDouble() * 400000 - 100000));
+                pointsList.Add(new Point(i + startX, rnd.NextDouble() * 400000 - 100000));
             }
-        }
-
-        private void ToggleButton_Click(object sender, RoutedEventArgs e)
-        {
-            isSmallActive = !isSmallActive;
-            Refresh();
         }
 
         private void Refresh()
         {
-            if (cc != null)
-            {
-                cc.Dispose();
-            }
-
-            cc = new WPFCanvasChart(this.Canvas, HorizScroll, VertScroll, this, settings, 
-                new WPFCanvasChartIntInterpolator(), new WPFCanvasChartFloatInterpolator());
             SetMinMax();
             cc.DrawChart();
         }
@@ -151,6 +169,23 @@ namespace WpfApplication1
         private void ZoomBothAtSameTime_Click(object sender, RoutedEventArgs e)
         {
             settings.ZoomXYAtSameTime = !settings.ZoomXYAtSameTime;
+        }
+
+        private void SmallChartMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            chartType = ChartType.Small;
+            Refresh();
+        }
+
+        private void BigChartMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            chartType = ChartType.Big;
+            Refresh();
+        }
+
+        private void BarChartMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(this, "Not implemented yet", "WPFCanvasChart Bar Chart");
         }
     }
 }

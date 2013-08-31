@@ -1,29 +1,59 @@
 ﻿<Window x:Class="WpfApplication1.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Width="800" Height="600">
+        Title="MainWindow" Width="800" Height="500">
     <Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Width="Auto"/>
-		</Grid.ColumnDefinitions>
-
-		<ToolBar Margin="0">
-			<ToggleButton Content="Small/Big" ToolTip="Small or big" Click="ToggleButton_Click"/>
-            <ToggleButton Name="ZoomBothAtSameTime" Content="Zoom both X and Y at same time" ToolTip="... or zoom only Y with ctrl + mouse wheel and mouse wheel only for x zoom" Click="ZoomBothAtSameTime_Click"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <Menu IsMainMenu="True">
+            <MenuItem Header="_Charts">
+                <MenuItem Header="Small chart" Name="SmallChartMenuItem" Click="SmallChartMenuItem_Click" />
+                <MenuItem Header="Big chart" Name="BigChartMenuItem" Click="BigChartMenuItem_Click" />
+                <MenuItem Header="Bar chart" Name="BarChartMenuItem" Click="BarChartMenuItem_Click" />
+            </MenuItem>
+        </Menu>
+        
+        <ToolBar Grid.Row="1">
+            <ToggleButton Name="ZoomBothAtSameTime" Content="Zoom both X and Y at same time" Click="ZoomBothAtSameTime_Click"
+                          ToolTip="... or zoom only Y with ctrl + mouse wheel and mouse wheel only for x zoom" />
+            <Separator></Separator>
             <ToggleButton Name="AreGridEnabledButton" Content="Are Grids Enabled" Click="AreGridEnabledButton_Click"/>
-		</ToolBar>
+        </ToolBar>
 
-		<Viewbox Stretch="Fill" Grid.Row="1">
-			<Canvas Name="Canvas" Width="350" Height="190" />
-		</Viewbox>
-		
-		<ScrollBar Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Name="HorizScroll" />
-		<ScrollBar Orientation="Vertical" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Stretch" Name="VertScroll" />
-	</Grid>
+        <Grid Grid.Row="2" Background="#DDDDDDDD">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" FontStyle="Italic" 
+                       Margin="0,0,0,5"  Text="X Axis"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontStyle="Italic" 
+                       Margin="5,0,0,0" Text="Y Axis">
+                <TextBlock.LayoutTransform>
+                    <RotateTransform Angle="270"/>
+                </TextBlock.LayoutTransform>
+            </TextBlock>
+
+            <Grid Grid.Row="0" Grid.Column="1" Name="CanvasParent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Canvas Name="Canvas" Width="{Binding Path=ActualWidth, ElementName=CanvasParent, Mode=OneWay}"
+                        Height="{Binding Path=ActualHeight, ElementName=CanvasParent, Mode=OneWay}"/>
+            </Grid>
+           
+            <ScrollBar Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" 
+                       HorizontalAlignment="Stretch" Name="HorizScroll" />
+            <ScrollBar Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Orientation="Vertical" 
+                       VerticalAlignment="Stretch" Name="VertScroll" />
+        </Grid>
+    </Grid>
 </Window>

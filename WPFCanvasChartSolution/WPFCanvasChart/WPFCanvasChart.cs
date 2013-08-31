@@ -99,6 +99,7 @@ namespace IgorCrevar.WPFCanvasChart
 
         private void InitCanvasHandlers()
         {
+            canvas.SizeChanged += Canvas_SizeChanged;
             canvas.MouseWheel += Canvas_MouseWheel;
             canvas.MouseMove += Canvas_MouseMove;
             canvas.MouseUp += Canvas_MouseUp;
@@ -114,6 +115,12 @@ namespace IgorCrevar.WPFCanvasChart
             }
         }
 
+        private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateHostsSizes();
+            DrawChart();
+        }
+
         private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Middle)
@@ -121,15 +128,6 @@ namespace IgorCrevar.WPFCanvasChart
                 isPanning = false;
                 canvas.Cursor = System.Windows.Input.Cursors.Arrow;
                 canvas.ReleaseMouseCapture();
-            }
-            else if (e.ChangedButton == MouseButton.Left)
-            {
-                var pos = e.GetPosition(chartHost);
-                if (pos.X >= 0 && pos.Y >= 0 && pos.X < chartHost.Width && pos.Y < chartHost.Height)
-                {
-                    pos = ChartPoint2Point(pos);
-                    drawer.OnWPFCanvasChartMouseUp(pos.X, pos.Y);
-                }
             }
         }
 
@@ -141,6 +139,15 @@ namespace IgorCrevar.WPFCanvasChart
                 isPanning = true;
                 canvas.Cursor = System.Windows.Input.Cursors.Hand;
                 canvas.CaptureMouse(); // mouse up anywhere will be sent to this control
+            }
+            else if (e.ChangedButton == MouseButton.Left)
+            {
+                var pos = e.GetPosition(chartHost);
+                if (pos.X >= 0 && pos.Y >= 0 && pos.X < chartHost.Width && pos.Y < chartHost.Height)
+                {
+                    pos = ChartPoint2Point(pos);
+                    drawer.OnWPFCanvasChartMouseUp(pos.X, pos.Y);
+                }
             }
         }
 
@@ -497,6 +504,7 @@ namespace IgorCrevar.WPFCanvasChart
         public void Dispose()
         {
             drawer = null;
+            canvas.SizeChanged -= Canvas_SizeChanged;
             canvas.MouseWheel -= Canvas_MouseWheel;
             canvas.MouseMove -= Canvas_MouseMove;
             canvas.MouseUp -= Canvas_MouseUp;
