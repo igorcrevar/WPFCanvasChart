@@ -33,6 +33,8 @@ namespace WpfApplication1
         private Brush brush = Brushes.Red;
         private WPFCanvasChartSettings settings;
         private ChartType chartType = ChartType.None;
+        private IWPFCanvasChartInterpolator xAxisInterpolator;
+        private IWPFCanvasChartInterpolator yAxisInterpolator;
 
         public MainWindow()
         {
@@ -50,8 +52,10 @@ namespace WpfApplication1
                 settings.FontSize = 4;
                 settings.PenForGrid = new Pen((Brush)new BrushConverter().ConvertFromString("#66000000"), 0.3);
                 settings.PenForAxis = new Pen((Brush)new BrushConverter().ConvertFromString("#CC000000"), 0.5);
+                xAxisInterpolator = new WPFCanvasChartIntInterpolator();
+                yAxisInterpolator = new WPFCanvasChartFloatInterpolator();
                 cc = new WPFCanvasChart(this.Canvas, HorizScroll, VertScroll, this, settings,
-                                        new WPFCanvasChartIntInterpolator(), new WPFCanvasChartFloatInterpolator());
+                                        xAxisInterpolator, yAxisInterpolator);
                 cc.SetMinMax(-5, 5, 10, 20);
                 cc.DrawChart();
             };
@@ -115,19 +119,9 @@ namespace WpfApplication1
             ctx.DrawLine(pen, p1, p2);
         }
 
-        public string FormatXAxis(double x)
-        {
-            return ((int)x).ToString();
-        }
-
-        public string FormatYAxis(double y)
-        {
-            return y.ToString("F1");
-        }
-
         public void OnWPFCanvasChartMouseUp(double x, double y)
         {
-            MessageBox.Show(this, string.Format("Position {0} : {1}", FormatXAxis(x), FormatYAxis(y)),
+            MessageBox.Show(this, string.Format("Position {0} : {1}", xAxisInterpolator.Format(x), yAxisInterpolator.Format(y)),
                 "WPFCanvasChart Left Mouse Click");
         }
 

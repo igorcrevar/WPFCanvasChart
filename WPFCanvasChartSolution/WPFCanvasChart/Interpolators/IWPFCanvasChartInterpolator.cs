@@ -11,5 +11,6 @@ namespace IgorCrevar.WPFCanvasChart.Interpolators
     public interface IWPFCanvasChartInterpolator
     {
         void Execute(double min, double max, int noOfSteps, Action<double> action);
+        string Format(double value);
     }
 }

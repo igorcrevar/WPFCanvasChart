@@ -7,6 +7,13 @@ namespace IgorCrevar.WPFCanvasChart.Interpolators
 {
     public class WPFCanvasChartFloatInterpolator : IWPFCanvasChartInterpolator
     {
+        private string formatString;
+
+        public WPFCanvasChartFloatInterpolator(string formatString = "F2")
+        {
+            this.formatString = formatString;
+        }
+
         public void Execute(double min, double max, int noOfSteps, Action<double> action)
         {
             double valueStep = Math.Abs(max - min) / noOfSteps;
@@ -16,6 +23,11 @@ namespace IgorCrevar.WPFCanvasChart.Interpolators
                 action(currentValue);
                 currentValue += valueStep;
             }
+        }
+
+        public string Format(double value)
+        {
+            return value.ToString(formatString);
         }
     }
 
@@ -30,6 +42,11 @@ namespace IgorCrevar.WPFCanvasChart.Interpolators
             {
                 action(i);
             }
+        }
+
+        public string Format(double value)
+        {
+            return ((int)value).ToString();
         }
     }
 }

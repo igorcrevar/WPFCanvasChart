@@ -300,15 +300,15 @@ namespace IgorCrevar.WPFCanvasChart
         // this method sets xMargin and yMargin, because every text on x and y axis has its width and height
         private void DetermineMargins()
         {
-            FormattedText ft = GetFormattedText(drawer.FormatYAxis(minY));
+            FormattedText ft = GetFormattedText(yAxisInterpolator.Format(minY));
             xMarginLeft = ft.Width;
-            ft = GetFormattedText(drawer.FormatYAxis(maxY));
+            ft = GetFormattedText(yAxisInterpolator.Format(maxY));
             if (xMarginLeft < ft.Width)
             {
                 xMarginLeft = ft.Width;
             }
 
-            ft = GetFormattedText(drawer.FormatXAxis(minX));
+            ft = GetFormattedText(xAxisInterpolator.Format(minX));
             yMargin = ft.Height;
             xMarginRight = ft.Width / 2;
             if (xMarginLeft < ft.Width / 2)
@@ -316,7 +316,7 @@ namespace IgorCrevar.WPFCanvasChart
                 xMarginLeft = ft.Width / 2;
             }
 
-            ft = GetFormattedText(drawer.FormatXAxis(maxX));
+            ft = GetFormattedText(xAxisInterpolator.Format(maxX));
             if (yMargin < ft.Height)
             {
                 yMargin = ft.Height;
@@ -390,14 +390,14 @@ namespace IgorCrevar.WPFCanvasChart
         #region Helper methods for subclasses
         protected void DrawXAxisText(DrawingContext ctx, double value, double desiredXPosition)
         {
-            FormattedText formattedText = GetFormattedText(drawer.FormatXAxis(value));
+            FormattedText formattedText = GetFormattedText(xAxisInterpolator.Format(value));
             double x = desiredXPosition + chartTransform.X + xMarginLeft - formattedText.Width / 2;
             ctx.DrawText(formattedText, new Point(x, 2 + xyAxisValuesHost.Height - yMargin));
         }
 
         protected void DrawYAxisText(DrawingContext ctx, double value, double desiredYPosition)
         {
-            FormattedText formattedText = GetFormattedText(drawer.FormatYAxis(value));
+            FormattedText formattedText = GetFormattedText(yAxisInterpolator.Format(value));
             double y = desiredYPosition + chartTransform.Y + yMargin - formattedText.Height / 2;
             ctx.DrawText(formattedText, new Point(xMarginLeft - formattedText.Width - 2, y));
         }

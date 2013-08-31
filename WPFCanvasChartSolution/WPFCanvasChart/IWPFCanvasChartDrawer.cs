@@ -10,8 +10,6 @@ namespace IgorCrevar.WPFCanvasChart
     public interface IWPFCanvasChartDrawer
     {
         void Draw(DrawingContext ctx);
-        string FormatXAxis(double x);
-        string FormatYAxis(double y);
         void OnWPFCanvasChartMouseUp(double x, double y);
     }
 }
