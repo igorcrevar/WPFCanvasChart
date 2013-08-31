@@ -23,6 +23,7 @@ Chart is fast if canvas used for charting is inside Viewbox(like in code snippet
 	<Canvas Name="Canvas" Width="{Binding Path=ActualWidth, ElementName=CanvasParent, Mode=OneWay}"
 		Height="{Binding Path=ActualHeight, ElementName=CanvasParent, Mode=OneWay}"/>
 </Grid>
+```
 
 ### How to use?
 Its easy! Just look at test project. Also:
