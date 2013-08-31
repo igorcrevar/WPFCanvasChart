@@ -35,13 +35,15 @@ namespace IgorCrevar.WPFCanvasChart
 
         private double xScale = 1.0d;
         private double yScale = 1.0d;
-        private double xMargin;
+        private double xMarginLeft;
+        private double xMarginRight;
         private double yMargin;
 
         private double virtualWidth;
         private double virtualHeight;
 
         private bool yZoomEnabled;
+        private bool xZoomEnabled;
         private WPFCanvasChartSettings settings;
         private IWPFCanvasChartInterpolator yAxisInterpolator;
         private IWPFCanvasChartInterpolator xAxisInterpolator;
@@ -54,6 +56,8 @@ namespace IgorCrevar.WPFCanvasChart
         /// <param name="vertScrollBar">Verical ScrollBar object. Can be null - that means vertical scroll is disabled</param>
         /// <param name="drawer">ICustomChartCanvasDrawer implementator. This object will implement actual chart drawing(lines, etc)</param>
         /// <param name="settings">WPFCanvasChartSettings instance - settings for chart</param>
+        /// <param name="xAxisInterpolator">value interpolator for x axis</param>
+        /// <param name="yAxisInterpolator">value interpolator for y axis</param>
         public WPFCanvasChart(Canvas canvas, ScrollBar horizScrollBar, ScrollBar vertScrollBar, IWPFCanvasChartDrawer drawer,
             WPFCanvasChartSettings settings, IWPFCanvasChartInterpolator xAxisInterpolator, IWPFCanvasChartInterpolator yAxisInterpolator)
         {
@@ -63,6 +67,7 @@ namespace IgorCrevar.WPFCanvasChart
             this.horizScrollBar = horizScrollBar;
             this.vertScrollBar = vertScrollBar;
             this.yZoomEnabled = vertScrollBar != null;
+            this.xZoomEnabled = horizScrollBar != null;
             this.xAxisInterpolator = xAxisInterpolator;
             this.yAxisInterpolator = yAxisInterpolator;
 
@@ -98,7 +103,11 @@ namespace IgorCrevar.WPFCanvasChart
             canvas.MouseMove += Canvas_MouseMove;
             canvas.MouseUp += Canvas_MouseUp;
             canvas.MouseDown += Canvas_MouseDown;
-            horizScrollBar.ValueChanged += HorizScrollBar_ValueChanged;
+            if (xZoomEnabled)
+            {
+                horizScrollBar.ValueChanged += HorizScrollBar_ValueChanged;
+            }
+
             if (yZoomEnabled)
             {
                 vertScrollBar.ValueChanged += VertScrollBar_ValueChanged;
@@ -154,7 +163,11 @@ namespace IgorCrevar.WPFCanvasChart
             if (isPanning)
             {
                 Point newPosition = e.GetPosition(canvas);
-                horizScrollBar.Value -= newPosition.X - mousePosition.X;
+                if (xZoomEnabled)
+                {
+                    horizScrollBar.Value -= newPosition.X - mousePosition.X;
+                }
+
                 if (yZoomEnabled)
                 {
                     vertScrollBar.Value -= newPosition.Y - mousePosition.Y;
@@ -205,9 +218,9 @@ namespace IgorCrevar.WPFCanvasChart
             axisHost.Width = canvas.Width;
             axisHost.Height = canvas.Height;
 
-            chartHost.Width = canvas.Width - xMargin * 2;
+            chartHost.Width = canvas.Width - xMarginLeft - xMarginRight;
             chartHost.Height = canvas.Height - yMargin * 2;
-            chartHost.Margin = new Thickness(xMargin, yMargin, xMargin, yMargin);
+            chartHost.Margin = new Thickness(xMarginLeft, yMargin, xMarginRight, yMargin);
 
             xyAxisValuesHost.Width = canvas.Width;
             xyAxisValuesHost.Height = canvas.Height;
@@ -221,10 +234,13 @@ namespace IgorCrevar.WPFCanvasChart
 
         private void SetHorizScrollBar()
         {
-            horizScrollBar.Minimum = 0;
-            // maximum is full width - what user see
-            horizScrollBar.Maximum = virtualWidth - chartHost.Width;
-            horizScrollBar.ViewportSize = chartHost.Width;
+            if (xZoomEnabled)
+            {
+                horizScrollBar.Minimum = 0;
+                // maximum is full width - what user see
+                horizScrollBar.Maximum = virtualWidth - chartHost.Width;
+                horizScrollBar.ViewportSize = chartHost.Width;
+            }
         }
 
         private void SetVertScrollBar()
@@ -239,6 +255,11 @@ namespace IgorCrevar.WPFCanvasChart
 
         private void ZoomX(double step)
         {
+            if (!xZoomEnabled)
+            {
+                return;
+            }
+
             double oldX = (horizScrollBar.Value + horizScrollBar.ViewportSize / 2) / xScale;
             double width = virtualWidth * step;
             CheckBoundary(ref width, chartHost.Width, chartHost.Width * settings.MaxXZoomStep);
@@ -269,18 +290,19 @@ namespace IgorCrevar.WPFCanvasChart
         private void DetermineMargins()
         {
             FormattedText ft = GetFormattedText(drawer.FormatYAxis(minY));
-            xMargin = ft.Width;
+            xMarginLeft = ft.Width;
             ft = GetFormattedText(drawer.FormatYAxis(maxY));
-            if (xMargin < ft.Width)
+            if (xMarginLeft < ft.Width)
             {
-                xMargin = ft.Width;
+                xMarginLeft = ft.Width;
             }
 
             ft = GetFormattedText(drawer.FormatXAxis(minX));
             yMargin = ft.Height;
-            if (xMargin < ft.Width / 2)
+            xMarginRight = ft.Width / 2;
+            if (xMarginLeft < ft.Width / 2)
             {
-                xMargin = ft.Width / 2;
+                xMarginLeft = ft.Width / 2;
             }
 
             ft = GetFormattedText(drawer.FormatXAxis(maxX));
@@ -289,33 +311,19 @@ namespace IgorCrevar.WPFCanvasChart
                 yMargin = ft.Height;
             }
 
-            if (xMargin < ft.Width / 2)
+            if (xMarginLeft < ft.Width / 2)
             {
-                xMargin = ft.Width / 2;
+                xMarginLeft = ft.Width / 2;
+            }
+
+            if (xMarginRight < ft.Width / 2)
+            {
+                xMarginRight = ft.Width / 2;
             }
 
             yMargin += 5.0d;
-            xMargin += 5.0d;
-
-            /*
-            yMargin = xMargin = 0.0d;
-            int noOfSteps = GetNoOfStepsForYAxis();
-            double valueStep = Math.Abs(maxY - minY) / noOfSteps;
-            double currentValue = minY + valueStep;
-            for (int i = 0; i <= noOfSteps; ++i)
-            {
-                string txt = drawer.FormatYAxis(currentValue);
-                FormattedText ft = GetFormattedText(txt);
-                yMargin = ft.Height + 5.0d;
-                double width = ft.Width + 5.0d;
-                if (width > xMargin)
-                {
-                    xMargin = width;
-                }
-
-                currentValue += valueStep;
-            }
-             * */
+            xMarginLeft += 5.0d;
+            xMarginRight += 5.0d;
         }
 
         /// <summary>
@@ -333,11 +341,13 @@ namespace IgorCrevar.WPFCanvasChart
             using (var ctx = axisHost.Drawing.RenderOpen())
             {
                 // fill hole rectangle
-                ctx.DrawRectangle(settings.BrushBackground, new Pen(settings.BrushBackground, 0.0d), new Rect(0, 0, axisHost.Width, axisHost.Height));
+                ctx.DrawRectangle(settings.BrushBackground, new Pen(settings.BrushBackground, 0.0d),
+                    new Rect(0, 0, axisHost.Width, axisHost.Height));
                 // y axis
-                ctx.DrawLine(settings.PenForAxis, new Point(xMargin, yMargin), new Point(xMargin, axisHost.Height - yMargin));
+                ctx.DrawLine(settings.PenForAxis, new Point(xMarginLeft, yMargin), new Point(xMarginLeft, axisHost.Height - yMargin));
                 // x axis
-                ctx.DrawLine(settings.PenForAxis, new Point(xMargin, axisHost.Height - yMargin), new Point(axisHost.Width - xMargin, axisHost.Height - yMargin));
+                ctx.DrawLine(settings.PenForAxis, new Point(xMarginLeft, axisHost.Height - yMargin), 
+                    new Point(axisHost.Width - xMarginRight, axisHost.Height - yMargin));
             }
         }
 
@@ -370,7 +380,7 @@ namespace IgorCrevar.WPFCanvasChart
         protected void DrawXAxisText(DrawingContext ctx, double value, double desiredXPosition)
         {
             FormattedText formattedText = GetFormattedText(drawer.FormatXAxis(value));
-            double x = desiredXPosition + chartTransform.X + xMargin - formattedText.Width / 2;
+            double x = desiredXPosition + chartTransform.X + xMarginLeft - formattedText.Width / 2;
             ctx.DrawText(formattedText, new Point(x, 2 + xyAxisValuesHost.Height - yMargin));
         }
 
@@ -378,7 +388,7 @@ namespace IgorCrevar.WPFCanvasChart
         {
             FormattedText formattedText = GetFormattedText(drawer.FormatYAxis(value));
             double y = desiredYPosition + chartTransform.Y + yMargin - formattedText.Height / 2;
-            ctx.DrawText(formattedText, new Point(xMargin - formattedText.Width - 2, y));
+            ctx.DrawText(formattedText, new Point(xMarginLeft - formattedText.Width - 2, y));
         }
 
         protected FormattedText GetFormattedText(string txt)
@@ -492,7 +502,11 @@ namespace IgorCrevar.WPFCanvasChart
             canvas.MouseUp -= Canvas_MouseUp;
             canvas.MouseDown -= Canvas_MouseDown;
             canvas.Children.Clear();
-            horizScrollBar.ValueChanged -= HorizScrollBar_ValueChanged;
+            if (xZoomEnabled)
+            {
+                horizScrollBar.ValueChanged -= HorizScrollBar_ValueChanged;
+            }
+
             if (yZoomEnabled)
             {
                 vertScrollBar.ValueChanged -= VertScrollBar_ValueChanged;
