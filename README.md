@@ -1,22 +1,25 @@
 # WPFCanvasChart
 
-### WPF line graph charting for large number of elements
-(although bar chart is also possible, but project is not ment for that)
+### WPF charting for large number of elements
+Let the WPFCanvasChart class do for you things like axis drawing, point translation, zooming, scrolling etc... Actual chart context draw by yourself
+by using helper methods provided by class. Line charts, bar charts, anything you want is possible.
 
 ### Description
-Flexibile and easy to use charting for wpf. It rel·a·tive·ly fast, for example, on my computer Amilo 3560, 8000 points can be draw and zoom/scroll very fast.
+Flexibile and easy to use charting for wpf. It relatively fast, for example, on my computer Amilo 3560, 8000 points can be draw and zoom/scroll very fast.
 12000+ points are slow :(. Much faster than chart from WPFToolkit, but does not allow binding(drawing must be done by programmer itself), although one can
 extend base class and allow binding.
 
 #### Note:
-Chart is fast for many points, if canvas used for charting is inside Viewbox(like in code snippet bellow). If canvas is inside some other container(for example grid like in second code snippet bellow), than performances dramatically decrease. Why? I do not know yet.
+Chart is fast if canvas used for charting is inside Viewbox(like in code snippet bellow). If canvas is inside some other container(for example grid like in second code snippet bellow), than performances dramatically decrease. Why? I do not know yet.
 ``` xml
+<!-- fast -->
 <Viewbox Stretch="Fill" Grid.Row="1">
 	<Canvas Name="Canvas" Width="350" Height="190" />
 </Viewbox>
 
-``` xml
-<Grid Grid.Row="0" Grid.Column="1" Name="CanvasParent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+<!-- slow :( -->
+<Grid Grid.Row="0" Grid.Column="1" Name="CanvasParent" 
+	HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 	<Canvas Name="Canvas" Width="{Binding Path=ActualWidth, ElementName=CanvasParent, Mode=OneWay}"
 		Height="{Binding Path=ActualHeight, ElementName=CanvasParent, Mode=OneWay}"/>
 </Grid>
