@@ -99,7 +99,11 @@ namespace IgorCrevar.WPFCanvasChart
 
         private void InitCanvasHandlers()
         {
-            canvas.SizeChanged += Canvas_SizeChanged;
+            if (settings.HandleSizeChanged)
+            {
+                canvas.SizeChanged += Canvas_SizeChanged;
+            }
+
             canvas.MouseWheel += Canvas_MouseWheel;
             canvas.MouseMove += Canvas_MouseMove;
             canvas.MouseUp += Canvas_MouseUp;
@@ -504,7 +508,11 @@ namespace IgorCrevar.WPFCanvasChart
         public void Dispose()
         {
             drawer = null;
-            canvas.SizeChanged -= Canvas_SizeChanged;
+            if (settings.HandleSizeChanged)
+            {
+                canvas.SizeChanged -= Canvas_SizeChanged;
+            }
+
             canvas.MouseWheel -= Canvas_MouseWheel;
             canvas.MouseMove -= Canvas_MouseMove;
             canvas.MouseUp -= Canvas_MouseUp;

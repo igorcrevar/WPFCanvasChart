@@ -45,11 +45,18 @@
                 </TextBlock.LayoutTransform>
             </TextBlock>
 
+            <!--
+            If canvas is inside grid then settings.HandleSizeChanged should be true.
+            This is way more slower than using canvas inside viewbox. Why? I do not know yet
             <Grid Grid.Row="0" Grid.Column="1" Name="CanvasParent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Canvas Name="Canvas" Width="{Binding Path=ActualWidth, ElementName=CanvasParent, Mode=OneWay}"
                         Height="{Binding Path=ActualHeight, ElementName=CanvasParent, Mode=OneWay}"/>
             </Grid>
-           
+            -->
+            <Viewbox Grid.Row="0" Grid.Column="1" Stretch="Fill">
+                <Canvas Name="Canvas" Width="350" Height="190" />
+            </Viewbox>
+
             <ScrollBar Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" 
                        HorizontalAlignment="Stretch" Name="HorizScroll" />
             <ScrollBar Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Orientation="Vertical" 

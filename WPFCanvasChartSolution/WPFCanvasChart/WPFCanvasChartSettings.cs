@@ -30,6 +30,7 @@ namespace IgorCrevar.WPFCanvasChart
             ZoomXYAtSameTime = false;
             AreGridsEnabled = true;
             ChartBackgroundBrush = Brushes.White;
+            HandleSizeChanged = true;
         }
 
         #region Properties
@@ -44,6 +45,7 @@ namespace IgorCrevar.WPFCanvasChart
         public bool ZoomXYAtSameTime { get; set; }
         public bool AreGridsEnabled { get; set; }
         public Brush ChartBackgroundBrush { get; set; }
+        public bool HandleSizeChanged { get; set; }
 
         public string Language
         {
