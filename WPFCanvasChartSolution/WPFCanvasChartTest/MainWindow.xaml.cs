@@ -89,7 +89,7 @@ namespace WpfApplication1
             double yStart = cc.Point2ChartPoint(new Point(0.0, 0.0)).Y;
             foreach (var p in points)
             {
-                ctx.DrawRectangle(brush, pen, new Rect(p.X, p.Y, width, yStart - p.Y));
+                ctx.DrawRectangle(brush, pen, new Rect(p.X - width / 2, p.Y, width, yStart - p.Y));
             }
         }
 
@@ -131,33 +131,6 @@ namespace WpfApplication1
                 "WPFCanvasChart Left Mouse Click");
         }
 
-        private void GenerateBigPointsList()
-        {
-            pointsList.Clear();
-            var rnd = new Random();
-            int count = rnd.Next(1000) + 5000;
-            int startX = rnd.Next(100) - 50;
-            for (int i = 0; i < count; ++i)
-            {
-                pointsList.Add(new Point(i + startX, rnd.NextDouble() * 400000 - 100000));
-            }
-        }
-
-        private void GenerateBarPointsList()
-        {
-            var rnd = new Random();
-            double maxY = double.MinValue;
-            pointsList.Clear();
-            for (int i = 0; i < settings.CoordXSteps; ++i)
-            {
-                Point p = new Point(i + 1, rnd.NextDouble() * 100);
-                maxY = Math.Max(maxY, p.Y);
-                pointsList.Add(p);
-            }
-
-            cc.SetMinMax(1, settings.CoordXSteps + 1, 0, maxY * 10 / 9);
-        }
-
         private void Refresh()
         {
             cc.DrawChart();
@@ -186,20 +159,27 @@ namespace WpfApplication1
         {
             settings.CoordXSteps = 10;
             chartType = ChartType.Big;
-            GenerateBigPointsList();
-            double minX = pointsList[0].X;
-            double maxX = pointsList[0].X;
-            double minY = pointsList[0].Y;
-            double maxY = pointsList[0].Y;
-            foreach (var point in pointsList)
+
+            pointsList.Clear();
+            var rnd = new Random();
+            int count = rnd.Next(1000) + 5000;
+            int startX = rnd.Next(100) - 50;
+            for (int i = 0; i < count; ++i)
             {
-                minX = Math.Min(minX, point.X);
-                maxX = Math.Max(maxX, point.X);
-                minY = Math.Min(minY, point.Y);
-                maxY = Math.Max(maxY, point.Y);
+                pointsList.Add(new Point(i + startX, rnd.NextDouble() * 400000 - 100000));
             }
 
-            cc.SetMinMax(minX, maxX, minY, maxY);
+            Point min = pointsList[0];
+            Point max = pointsList[0];
+            foreach (var point in pointsList)
+            {
+                min.X = Math.Min(min.X, point.X);
+                max.X = Math.Max(max.X, point.X);
+                min.Y = Math.Min(min.Y, point.Y);
+                max.Y = Math.Max(max.Y, point.Y);
+            }
+
+            cc.SetMinMax(min.X, max.X, min.Y, max.Y);
             Refresh();
         }
 
@@ -207,7 +187,18 @@ namespace WpfApplication1
         {
             settings.CoordXSteps = 4 + new Random().Next(4);
             chartType = ChartType.Bar;
-            GenerateBarPointsList();
+            var rnd = new Random();
+            double maxY = double.MinValue;
+            pointsList.Clear();
+            for (int i = 0; i < settings.CoordXSteps; ++i)
+            {
+                Point p = new Point(i + 1, rnd.NextDouble() * 100);
+                maxY = Math.Max(maxY, p.Y);
+                pointsList.Add(p);
+            }
+
+            cc.SetMinMax(0, settings.CoordXSteps + 1, 0, maxY * 10 / 9);
+
             Refresh();
         }
     }
