@@ -33,4 +33,6 @@ Its easy! Just look at test project. Also:
 - draw call on WPFCanvasChart instance will draw chart(step above must be executed before drawing!)
 - IWPFCanvasChartDrawer method public void Draw(DrawingContext ctx) is used to draw actual graph
 - Inside public void Draw(DrawingContext ctx) use Point2ChartPoint to convert your actual value to chart point
+- Simple bar chart control is included as separate project(WPFBarChartControl). It provides easy and 
+customizable bar chart creation with legend. Look at WPFBarChartExample project for detailed explanation
 
