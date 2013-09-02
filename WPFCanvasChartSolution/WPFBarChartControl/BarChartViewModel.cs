@@ -19,13 +19,6 @@ namespace IgorCrevar.WPFBarChartControl
 
         public void Update(BarChartModel model)
         {
-            if (model.Data.Count != model.Legend.Count)
-            {
-                throw new ArgumentException(string.Format(
-                    "BarChartModel instance Data.Count = {0} and Legend.Count = {1}. Lists must contains same number of elements",
-                    model.Data.Count, model.Legend.Count));
-            }
-
             XAxisText = model.XAxisText;
             YAxisText = model.YAxisText;
             HorizScrollVisibility = model.HorizScrollVisibility;

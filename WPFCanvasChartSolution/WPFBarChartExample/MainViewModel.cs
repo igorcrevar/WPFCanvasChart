@@ -6,6 +6,7 @@ using IgorCrevar.WPFCanvasChart.Interpolators;
 using System.Windows;
 using System.Windows.Media;
 using IgorCrevar.WPFBarChartControl.Model;
+using IgorCrevar.WPFBarChartControl.Drawer;
 
 namespace WPFBarChartExample
 {
@@ -51,13 +52,13 @@ namespace WPFBarChartExample
                     new LegendItem(Colors.Yellow, "Admins"),
                     new LegendItem(Colors.Brown, "Management"),
                 },
-                Data = new List<Point>
+                BarChartDrawer = new BarChartDrawer(new List<Point>
                 {
                     new Point(1.0d, rnd.Next(100)),
                     new Point(2.0d, rnd.Next(100)),
                     new Point(3.0d, rnd.Next(100)),
                     new Point(4.0d, rnd.Next(100)),
-                },
+                }),
                 FixedYMin = 0.0d,
             };
         }

@@ -9,7 +9,7 @@ namespace IgorCrevar.WPFBarChartControl.Drawer
     /// <summary>
     /// Base class for all bar charts drawers
     /// </summary>
-    abstract class AbstractBarChartDrawer : IWPFCanvasChartDrawer, IDisposable
+    public abstract class AbstractBarChartDrawer : IWPFCanvasChartDrawer, IDisposable
     {
         private WPFCanvasChart.WPFCanvasChart chart = null;
         private BarChartModel model;

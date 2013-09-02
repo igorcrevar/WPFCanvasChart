@@ -11,13 +11,11 @@ namespace IgorCrevar.WPFBarChartControl
     /// </summary>
     public partial class BarChart : UserControl, IDisposable
     {
-        private BarChartDrawer barChartDrawer;
         private BarChartViewModel viewModel;
        
         public BarChart()
         {
             InitializeComponent();
-            barChartDrawer = new BarChartDrawer();
             this.viewModel = new BarChartViewModel();
             this.BarChartMainGrid.DataContext = viewModel;
         }
@@ -25,7 +23,7 @@ namespace IgorCrevar.WPFBarChartControl
         // Dependency Property
         public static readonly DependencyProperty ModelProperty =
              DependencyProperty.Register("Model", typeof(BarChartModel),
-             typeof(BarChart), new FrameworkPropertyMetadata(new BarChartModel(), OnPropertyChanged));
+             typeof(BarChart), new FrameworkPropertyMetadata(null, OnPropertyChanged));
 
         private static void OnPropertyChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
         {
@@ -49,13 +47,26 @@ namespace IgorCrevar.WPFBarChartControl
 
         private void Update(BarChartModel model)
         {
+            if (model == null)
+            {
+                return;
+            }
+
+            if (model.BarChartDrawer == null)
+            {
+                throw new ArgumentNullException("BarChartDrawer is null!");
+            }
+
             viewModel.Update(model);
-            barChartDrawer.Update(model, Canvas, HorizScroll, VertScroll);
+            model.BarChartDrawer.Update(model, Canvas, HorizScroll, VertScroll);
         }
 
         public void Dispose()
         {
-            barChartDrawer.Dispose();
+            if (Model != null && Model.BarChartDrawer != null)
+            {
+                Model.BarChartDrawer.Dispose();
+            }
         }
     }
 }

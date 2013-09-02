@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using IgorCrevar.WPFCanvasChart;
 using IgorCrevar.WPFCanvasChart.Interpolators;
+using IgorCrevar.WPFBarChartControl.Drawer;
 
 namespace IgorCrevar.WPFBarChartControl.Model
 {
@@ -21,7 +22,7 @@ namespace IgorCrevar.WPFBarChartControl.Model
         public WPFCanvasChartSettings Settings { get; set; }
         public IWPFCanvasChartInterpolator XAxisInterpolator { get; set; }
         public IWPFCanvasChartInterpolator YAxisInterpolator { get; set; }
-        public IList<Point> Data { get; set; }
+        public AbstractBarChartDrawer BarChartDrawer { get; set; }
         /// <summary>
         /// set to NaN if you want minimum depends on points data, otherwise set fixed y min
         /// </summary>

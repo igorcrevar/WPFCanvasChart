@@ -2,24 +2,40 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using IgorCrevar.WPFBarChartControl.Model;
+using System.Collections.Generic;
 
 namespace IgorCrevar.WPFBarChartControl.Drawer
 {
-    class BarChartDrawer : AbstractBarChartDrawer
+    public class BarChartDrawer : AbstractBarChartDrawer
     {
+        private IList<Point> chartPoints;
+
+        public BarChartDrawer(IList<Point> chartPoints)
+        {
+            this.chartPoints = chartPoints;
+        }
+
         protected override void OnModelUpdate()
         {
-            if (Model.Data.Count == 0)
+            if (chartPoints.Count != Model.Legend.Count)
+            {
+                throw new ArgumentException(string.Format(
+                    "chartPoints.Count = {0} and BarChartModel instance Legend.Count = {1}. Lists must contains same number of elements",
+                    chartPoints.Count, Model.Legend.Count));
+            }
+
+            if (chartPoints.Count == 0)
             {
                 Chart.SetMinMax(0, 1, 0, 10);
             }
             else
             {
-                Point min = Model.Data[0];
-                Point max = Model.Data[0];
-                for (int i = 1; i < Model.Data.Count; ++i)
+                Point min = chartPoints[0];
+                Point max = chartPoints[0];
+                for (int i = 1; i < chartPoints.Count; ++i)
                 {
-                    var p = Model.Data[i];
+                    var p = chartPoints[i];
                     min.X = Math.Min(min.X, p.X);
                     min.Y = Math.Min(min.Y, p.Y);
 
@@ -40,14 +56,14 @@ namespace IgorCrevar.WPFBarChartControl.Drawer
 
         public override void Draw(DrawingContext ctx)
         {
-            if (Model.Data.Count == 0)
+            if (chartPoints.Count == 0)
             {
                 return;
             }
 
-            var points = Model.Data.Select(i => Chart.Point2ChartPoint(i)).ToList();
+            var points = chartPoints.Select(i => Chart.Point2ChartPoint(i)).ToList();
             double width = 0.0d;
-            if (Model.Data.Count == 1)
+            if (chartPoints.Count == 1)
             {
                 var p1 = Chart.Point2ChartPoint(new Point(points[0].X - 1, 0));
                 var p2 = Chart.Point2ChartPoint(new Point(points[0].X + 1, 0));

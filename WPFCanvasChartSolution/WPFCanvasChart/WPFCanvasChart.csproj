@@ -8,8 +8,8 @@
     <ProjectGuid>{B0C5D614-8F9E-4C31-B47D-EB8CFE7679C1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WPFCustomChart</RootNamespace>
-    <AssemblyName>WPFCustomChart</AssemblyName>
+    <RootNamespace>IgorCrevar.WPFCanvasChart</RootNamespace>
+    <AssemblyName>WPFCanvasChart</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
