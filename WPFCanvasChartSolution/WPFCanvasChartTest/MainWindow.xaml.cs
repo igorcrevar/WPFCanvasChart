@@ -119,7 +119,7 @@ namespace WpfApplication1
             ctx.DrawLine(pen, p1, p2);
         }
 
-        public void OnWPFCanvasChartMouseUp(double x, double y)
+        public void OnChartMouseDown(double x, double y)
         {
             MessageBox.Show(this, string.Format("Position {0} : {1}", xAxisInterpolator.Format(x), yAxisInterpolator.Format(y)),
                 "WPFCanvasChart Left Mouse Click");

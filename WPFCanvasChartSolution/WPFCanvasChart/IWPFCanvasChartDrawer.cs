@@ -10,6 +10,6 @@ namespace IgorCrevar.WPFCanvasChart
     public interface IWPFCanvasChartDrawer
     {
         void Draw(DrawingContext ctx);
-        void OnWPFCanvasChartMouseUp(double x, double y);
+        void OnChartMouseDown(double x, double y);
     }
 }

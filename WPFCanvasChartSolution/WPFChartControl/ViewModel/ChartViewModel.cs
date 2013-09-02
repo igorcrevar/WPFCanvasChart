@@ -1,13 +1,12 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
-using IgorCrevar.WPFBarChartControl.Model;
+using IgorCrevar.WPFChartControl.Model;
 
-namespace IgorCrevar.WPFBarChartControl
+namespace IgorCrevar.WPFChartControl.ViewModel
 {
-    class BarChartViewModel : INotifyPropertyChanged
+    class ChartViewModel : INotifyPropertyChanged
     {
         private string xAxisText = string.Empty;
         private string yAxisText = string.Empty;
@@ -17,7 +16,7 @@ namespace IgorCrevar.WPFBarChartControl
         private ObservableCollection<LegendItem> legend = new ObservableCollection<LegendItem>();
         private Brush background;
 
-        public void Update(BarChartModel model)
+        public void Update(ChartModel model)
         {
             XAxisText = model.XAxisText;
             YAxisText = model.YAxisText;

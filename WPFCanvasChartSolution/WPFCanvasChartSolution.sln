@@ -5,9 +5,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFCanvasChartTest", "WPFCa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFCanvasChart", "WPFCanvasChart\WPFCanvasChart.csproj", "{B0C5D614-8F9E-4C31-B47D-EB8CFE7679C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFBarChartControl", "WPFBarChartControl\WPFBarChartControl.csproj", "{463766C2-C063-4970-96C8-72A39B2A3474}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFChartControl", "WPFChartControl\WPFChartControl.csproj", "{463766C2-C063-4970-96C8-72A39B2A3474}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFBarChartExample", "WPFBarChartExample\WPFBarChartExample.csproj", "{CC3CB22D-B1DD-49CD-B057-7FB244327B41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFChartControlExample", "WPFChartControlExample\WPFChartControlExample.csproj", "{CC3CB22D-B1DD-49CD-B057-7FB244327B41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using IgorCrevar.WPFBarChartControl.Model;
+using IgorCrevar.WPFChartControl.Model;
 using System.Collections.Generic;
 
-namespace IgorCrevar.WPFBarChartControl.Drawer
+namespace IgorCrevar.WPFChartControl.Drawer
 {
-    public class BarChartDrawer : AbstractBarChartDrawer
+    public class BarChartDrawer : AbstractChartDrawer
     {
         private IList<Point> chartPoints;
 
@@ -21,7 +21,7 @@ namespace IgorCrevar.WPFBarChartControl.Drawer
             if (chartPoints.Count != Model.Legend.Count)
             {
                 throw new ArgumentException(string.Format(
-                    "chartPoints.Count = {0} and BarChartModel instance Legend.Count = {1}. Lists must contains same number of elements",
+                    "chartPoints.Count = {0} and ChartModel instance Legend.Count = {1}. Lists must contains same number of elements",
                     chartPoints.Count, Model.Legend.Count));
             }
 
@@ -86,7 +86,7 @@ namespace IgorCrevar.WPFBarChartControl.Drawer
             }
         }
 
-        public override void OnWPFCanvasChartMouseUp(double x, double y)
+        public override void OnChartMouseDown(double x, double y)
         {
         }
     }

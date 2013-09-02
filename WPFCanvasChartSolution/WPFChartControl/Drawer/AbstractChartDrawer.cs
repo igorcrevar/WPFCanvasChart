@@ -2,22 +2,22 @@
 using IgorCrevar.WPFCanvasChart;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using IgorCrevar.WPFBarChartControl.Model;
+using IgorCrevar.WPFChartControl.Model;
 
-namespace IgorCrevar.WPFBarChartControl.Drawer
+namespace IgorCrevar.WPFChartControl.Drawer
 {
     /// <summary>
-    /// Base class for all bar charts drawers
+    /// Base class for all charts drawers
     /// </summary>
-    public abstract class AbstractBarChartDrawer : IWPFCanvasChartDrawer, IDisposable
+    public abstract class AbstractChartDrawer : IWPFCanvasChartDrawer, IDisposable
     {
         private WPFCanvasChart.WPFCanvasChart chart = null;
-        private BarChartModel model;
+        private ChartModel model;
 
         protected WPFCanvasChart.WPFCanvasChart Chart { get { return chart; } }
-        protected BarChartModel Model { get { return model; } }
+        protected ChartModel Model { get { return model; } }
                 
-        public void Update(BarChartModel model, Canvas canvas, ScrollBar horizScroll, ScrollBar vertScroll)
+        public void Update(ChartModel model, Canvas canvas, ScrollBar horizScroll, ScrollBar vertScroll)
         {
             this.model = model;
             Dispose();
@@ -41,7 +41,7 @@ namespace IgorCrevar.WPFBarChartControl.Drawer
 
         #region Abstract Methods
         public abstract void Draw(System.Windows.Media.DrawingContext ctx);
-        public abstract void OnWPFCanvasChartMouseUp(double x, double y);
+        public abstract void OnChartMouseDown(double x, double y);
         protected abstract void OnModelUpdate();
         #endregion Abstract Methods
     }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media;
 
-namespace IgorCrevar.WPFBarChartControl.Model
+namespace IgorCrevar.WPFChartControl.Model
 {
     public class LegendItem
     {

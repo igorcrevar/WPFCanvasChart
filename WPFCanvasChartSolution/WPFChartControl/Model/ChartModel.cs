@@ -6,11 +6,11 @@ using System.Windows;
 using System.Windows.Media;
 using IgorCrevar.WPFCanvasChart;
 using IgorCrevar.WPFCanvasChart.Interpolators;
-using IgorCrevar.WPFBarChartControl.Drawer;
+using IgorCrevar.WPFChartControl.Drawer;
 
-namespace IgorCrevar.WPFBarChartControl.Model
+namespace IgorCrevar.WPFChartControl.Model
 {
-    public class BarChartModel
+    public class ChartModel
     {
         public string XAxisText { get; set; }
         public string YAxisText { get; set; }
@@ -22,13 +22,13 @@ namespace IgorCrevar.WPFBarChartControl.Model
         public WPFCanvasChartSettings Settings { get; set; }
         public IWPFCanvasChartInterpolator XAxisInterpolator { get; set; }
         public IWPFCanvasChartInterpolator YAxisInterpolator { get; set; }
-        public AbstractBarChartDrawer BarChartDrawer { get; set; }
+        public AbstractChartDrawer ChartDrawer { get; set; }
         /// <summary>
         /// set to NaN if you want minimum depends on points data, otherwise set fixed y min
         /// </summary>
         public double FixedYMin { get; set; }
 
-        public BarChartModel()
+        public ChartModel()
         {
             FixedYMin = double.NaN;
             Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DDDDDDDD"));

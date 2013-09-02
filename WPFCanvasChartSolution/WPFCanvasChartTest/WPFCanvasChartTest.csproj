@@ -8,8 +8,8 @@
     <ProjectGuid>{ED3CB320-9245-4BE4-8DE6-3917FAA30193}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WpfApplication2</RootNamespace>
-    <AssemblyName>WPFCanvasChart</AssemblyName>
+    <RootNamespace>WpfApplication1</RootNamespace>
+    <AssemblyName>WPFCanvasChartTest</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>

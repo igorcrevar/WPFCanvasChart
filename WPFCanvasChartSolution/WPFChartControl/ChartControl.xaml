@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="IgorCrevar.WPFBarChartControl.BarChart"
+﻿<UserControl x:Class="IgorCrevar.WPFChartControl.ChartControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -19,7 +19,7 @@
         </DataTemplate>
     </UserControl.Resources>
     
-    <Grid Background="{Binding Path=Background, FallbackValue=#DDDDDDDD}" Name="BarChartMainGrid">
+    <Grid Background="{Binding Path=Background, FallbackValue=#DDDDDDDD}" Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -46,7 +46,7 @@
                         Height="{Binding Path=ActualHeight, ElementName=CanvasParent, Mode=OneWay}"/>
         </Grid>
         
-        <ScrollBar Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" Visibility="{Binding HorizScrollVisibility}"
+        <ScrollBar Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" Visibility="{Binding HorizScrollVisibility}"
                        HorizontalAlignment="Stretch" Name="HorizScroll" />
         <ScrollBar Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Orientation="Vertical" Visibility="{Binding VertScrollVisibility}"
                        VerticalAlignment="Stretch" Name="VertScroll" />

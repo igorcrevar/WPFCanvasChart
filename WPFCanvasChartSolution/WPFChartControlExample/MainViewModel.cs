@@ -5,10 +5,10 @@ using IgorCrevar.WPFCanvasChart;
 using IgorCrevar.WPFCanvasChart.Interpolators;
 using System.Windows;
 using System.Windows.Media;
-using IgorCrevar.WPFBarChartControl.Model;
-using IgorCrevar.WPFBarChartControl.Drawer;
+using IgorCrevar.WPFChartControl.Model;
+using IgorCrevar.WPFChartControl.Drawer;
 
-namespace WPFBarChartExample
+namespace WPFChartControlExample
 {
     class MainViewModel : INotifyPropertyChanged
     {
@@ -30,12 +30,12 @@ namespace WPFBarChartExample
             }
         }
 
-        private BarChartModel barChartModel;
+        private ChartModel barChartModel;
 
         public MainViewModel()
         {
             var rnd = new Random();
-            BarChartModel = new BarChartModel()
+            BarChartModel = new ChartModel()
             {
                 HorizScrollVisibility = Visibility.Visible,
                 VertScrollVisibility = Visibility.Collapsed,
@@ -43,7 +43,7 @@ namespace WPFBarChartExample
                 Settings = new WPFCanvasChartSettings(),
                 XAxisText = "Type of workers",
                 YAxisText = "Number of people",
-                YAxisInterpolator = new WPFCanvasChartIntInterpolator(),
+                YAxisInterpolator = new WPFCanvasChartFloatInterpolator(),
                 XAxisInterpolator = new BarXAxisInterpolator(),
                 Legend = new List<LegendItem>()
                 {
@@ -52,7 +52,7 @@ namespace WPFBarChartExample
                     new LegendItem(Colors.Yellow, "Admins"),
                     new LegendItem(Colors.Brown, "Management"),
                 },
-                BarChartDrawer = new BarChartDrawer(new List<Point>
+                ChartDrawer = new BarChartDrawer(new List<Point>
                 {
                     new Point(1.0d, rnd.Next(100)),
                     new Point(2.0d, rnd.Next(100)),
@@ -61,17 +61,43 @@ namespace WPFBarChartExample
                 }),
                 FixedYMin = 0.0d,
             };
-        }
 
-        public string TestProperty
-        {
-            get
+            var serie1 = new List<Point>() 
             {
-                return "Hello world!";
-            }
+                new Point(10.0d, -20.50d),
+                new Point(30.0d, 30.58d),
+                new Point(50.0d, 10.00d),
+            };
+
+            var serie2 = new List<Point>() 
+            {
+                new Point(5.0d, 100.0d),
+                new Point(20.0d, 40.0d),
+                new Point(50.0d, 90.00d),
+            };
+            LineSeriesChartModel = new ChartModel()
+            {
+                HorizScrollVisibility = Visibility.Visible,
+                VertScrollVisibility = Visibility.Visible,
+                LegendVisibility = Visibility.Visible,
+                Settings = new WPFCanvasChartSettings(),
+                XAxisText = "Layer",
+                YAxisText = "Value",
+                YAxisInterpolator = new WPFCanvasChartFloatInterpolator(),
+                XAxisInterpolator = new WPFCanvasChartIntInterpolator(),
+                Legend = new List<LegendItem>()
+                {
+                    new LegendItem(Colors.Blue, "Something"),
+                    new LegendItem(Colors.Red, "Else"),
+                },
+                ChartDrawer = new LineSeriesChartDrawer(new List<IList<Point>>()
+                {
+                    serie1, serie2
+                }) 
+            };
         }
 
-        public BarChartModel BarChartModel
+        public ChartModel BarChartModel
         {
             get
             {
@@ -88,9 +114,26 @@ namespace WPFBarChartExample
             }
         }
 
+        public ChartModel LineSeriesChartModel
+        {
+            get
+            {
+                return lineSeriesChartModel;
+            }
+
+            set
+            {
+                if (lineSeriesChartModel != value)
+                {
+                    lineSeriesChartModel = value;
+                    OnPropertyChanged("LineSeriesChartModel");
+                }
+            }
+        }
 
         #region INotifyPropertyChanged part
         public event PropertyChangedEventHandler PropertyChanged;
+        private ChartModel lineSeriesChartModel;
 
         protected void OnPropertyChanged(string name)
         {

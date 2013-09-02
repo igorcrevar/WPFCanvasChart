@@ -8,8 +8,8 @@
     <ProjectGuid>{CC3CB22D-B1DD-49CD-B057-7FB244327B41}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WPFBarChartExample</RootNamespace>
-    <AssemblyName>WPFBarChartExample</AssemblyName>
+    <RootNamespace>WPFChartControlExample</RootNamespace>
+    <AssemblyName>WPFChartControlExample</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -100,9 +100,9 @@
       <Project>{B0C5D614-8F9E-4C31-B47D-EB8CFE7679C1}</Project>
       <Name>WPFCanvasChart</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WPFBarChartControl\WPFBarChartControl.csproj">
+    <ProjectReference Include="..\WPFChartControl\WPFChartControl.csproj">
       <Project>{463766C2-C063-4970-96C8-72A39B2A3474}</Project>
-      <Name>WPFBarChartControl</Name>
+      <Name>WPFChartControl</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

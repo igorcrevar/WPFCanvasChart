@@ -150,7 +150,7 @@ namespace IgorCrevar.WPFCanvasChart
                 if (pos.X >= 0 && pos.Y >= 0 && pos.X < chartHost.Width && pos.Y < chartHost.Height)
                 {
                     pos = ChartPoint2Point(pos);
-                    drawer.OnWPFCanvasChartMouseUp(pos.X, pos.Y);
+                    drawer.OnChartMouseDown(pos.X, pos.Y);
                 }
             }
         }
