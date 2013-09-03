@@ -12,21 +12,20 @@ namespace WPFChartControlExample
 {
     class MainViewModel : INotifyPropertyChanged
     {
-        class CustomBarXAxisInterpolator : IWPFCanvasChartInterpolator
+        class CustomInterpolator : WPFCanvasChartIntInterpolator
         {
-            public virtual string Format(double value)
+            public override string Format(double value)
             {
-                return string.Empty;
+                var months = new string[] {
+                    "January", "February", "March", "April", "Maj", "June", "July"
+                };
+                int v = (int)value;
+                return v >= 0 && v < months.Length ? months[v] : string.Empty;
             }
 
-            public void Execute(double min, double max, int noOfSteps, Action<double> action)
+            public override string FormatLongestValue()
             {
-                double stepDouble = (max - min) / noOfSteps + 0.5d;
-                int step = Math.Max(1, (int)stepDouble);
-                for (int i = (int)min + step; i <= (int)max; i += step)
-                {
-                    action(i);
-                }
+                return "February";
             }
         }
 
@@ -50,7 +49,7 @@ namespace WPFChartControlExample
                 Settings = new WPFCanvasChartSettings(),
                 YAxisText = "Number of people",
                 YAxisInterpolator = new WPFCanvasChartFloatInterpolator(),
-                XAxisInterpolator = new CustomBarXAxisInterpolator(),
+                XAxisInterpolator = new WPFCanvasChartIntEmptyInterpolator(),
                 Legend = new LegendItem[]
                 {
                     new LegendItem(Colors.Blue, "Programmers"),
@@ -87,20 +86,20 @@ namespace WPFChartControlExample
 
             StackedBarChartDrawer = new StackedBarChartDrawer(new List<StackedBarItem>
             {
-               new StackedBarItem(2007, new double[] { 50, 30, 20 }),
-               new StackedBarItem(2008, new double[] { 100, 0, 100 }),
-               new StackedBarItem(2009, new double[] { 40, 10, 30 }),
-               new StackedBarItem(2010, new double[] { 100, 50, 50 }),
-               new StackedBarItem(2011, new double[] { 80, 90, -10 }),
-               new StackedBarItem(2012, new double[] { 30, 20, 10 }),
-               new StackedBarItem(2013, new double[] { 20, 5, 15 }),
+               new StackedBarItem(0, new double[] { 50, 30, 20 }),
+               new StackedBarItem(1, new double[] { 100, 0, 100 }),
+               new StackedBarItem(2, new double[] { 40, 10, 30 }),
+               new StackedBarItem(3, new double[] { 100, 50, 50 }),
+               new StackedBarItem(4, new double[] { 80, 90, -10 }),
+               new StackedBarItem(5, new double[] { 30, 20, 10 }),
+               new StackedBarItem(6, new double[] { 20, 5, 15 }),
             })
             {
-                XAxisText = "Power",
-                YAxisText = "Year",
+                YAxisText = "Power",
+                XAxisText = "Month",
                 Settings = new WPFCanvasChartSettings(),
                 YAxisInterpolator = new WPFCanvasChartFloatInterpolator(),
-                XAxisInterpolator = new WPFCanvasChartIntInterpolator(),
+                XAxisInterpolator = new CustomInterpolator(),
                 Legend = new LegendItem[]
                 {
                     new LegendItem(Colors.Blue, "Active"),

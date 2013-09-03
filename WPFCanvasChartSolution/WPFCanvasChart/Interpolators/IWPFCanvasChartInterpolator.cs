@@ -12,5 +12,11 @@ namespace IgorCrevar.WPFCanvasChart.Interpolators
     {
         void Execute(double min, double max, int noOfSteps, Action<double> action);
         string Format(double value);
+        /// <summary>
+        /// This method is used by DetermineMargins method inside WPFCanvasChart class
+        /// Just return null if you not sure what to return as result
+        /// </summary>
+        /// <returns>string representation of longest value on axis</returns>
+        string FormatLongestValue();
     }
 }

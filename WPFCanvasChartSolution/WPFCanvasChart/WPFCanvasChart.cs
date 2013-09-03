@@ -301,7 +301,7 @@ namespace IgorCrevar.WPFCanvasChart
         // this method sets xMargin and yMargin, because every text on x and y axis has its width and height
         private void DetermineMargins()
         {
-            FormattedText ft = GetFormattedText(yAxisInterpolator.Format(minY));
+            FormattedText ft = GetFormattedText(yAxisInterpolator.FormatLongestValue() ?? yAxisInterpolator.Format(minY));
             xMarginLeft = ft.Width;
             ft = GetFormattedText(yAxisInterpolator.Format(maxY));
             if (xMarginLeft < ft.Width)
@@ -309,7 +309,7 @@ namespace IgorCrevar.WPFCanvasChart
                 xMarginLeft = ft.Width;
             }
 
-            ft = GetFormattedText(xAxisInterpolator.Format(minX));
+            ft = GetFormattedText(xAxisInterpolator.FormatLongestValue() ?? xAxisInterpolator.Format(minX));
             yMargin = ft.Height;
             xMarginRight = ft.Width / 2;
             if (xMarginLeft < ft.Width / 2)

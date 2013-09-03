@@ -25,9 +25,14 @@ namespace IgorCrevar.WPFCanvasChart.Interpolators
             }
         }
 
-        public string Format(double value)
+        public virtual string Format(double value)
         {
             return value.ToString(formatString);
+        }
+
+        public virtual string FormatLongestValue()
+        {
+            return null;
         }
     }
 
@@ -44,9 +49,25 @@ namespace IgorCrevar.WPFCanvasChart.Interpolators
             }
         }
 
-        public string Format(double value)
+        public virtual string Format(double value)
         {
             return ((int)value).ToString();
+        }
+
+        public virtual string FormatLongestValue()
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Same as WPFCanvasChartIntInterpolator but outputs all empty strings on axis
+    /// </summary>
+    public class WPFCanvasChartIntEmptyInterpolator : WPFCanvasChartIntInterpolator
+    {
+        public override string Format(double value)
+        {
+            return string.Empty;
         }
     }
 }
