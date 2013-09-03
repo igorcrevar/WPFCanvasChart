@@ -10,7 +10,7 @@ namespace IgorCrevar.WPFCanvasChart.Interpolators
     /// </summary>
     public interface IWPFCanvasChartInterpolator
     {
-        void Execute(double min, double max, int noOfSteps, Action<double> action);
+        IEnumerable<double> GetSteps(double min, double max, int noOfSteps);
         string Format(double value);
         /// <summary>
         /// This method is used by DetermineMargins method inside WPFCanvasChart class

@@ -449,7 +449,7 @@ namespace IgorCrevar.WPFCanvasChart
 
         protected virtual void DrawXAxis(DrawingContext ctx, DrawingContext chartCtx)
         {
-            xAxisInterpolator.Execute(minX, maxX, GetNoOfStepsForXAxis(), (currentValue) =>
+            foreach (double currentValue in xAxisInterpolator.GetSteps(minX, maxX, GetNoOfStepsForXAxis()))
             {
                 var currentPosition = Point2ChartPoint(new Point(currentValue, 0.0));
                 DrawVerticalGrid(chartCtx, currentPosition.X);
@@ -458,12 +458,12 @@ namespace IgorCrevar.WPFCanvasChart
                 {
                     DrawXAxisText(ctx, currentValue, currentPosition.X);
                 }
-            });
+            }
         }
 
         protected virtual void DrawYAxis(DrawingContext ctx, DrawingContext chartCtx)
         {
-            yAxisInterpolator.Execute(minY, maxY, GetNoOfStepsForYAxis(), (currentValue) =>
+            foreach (double currentValue in yAxisInterpolator.GetSteps(minY, maxY, GetNoOfStepsForYAxis()))
             {
                 var currentPosition = Point2ChartPoint(new Point(0.0, currentValue));
                 DrawHorizontalGrid(chartCtx, currentPosition.Y);
@@ -473,7 +473,7 @@ namespace IgorCrevar.WPFCanvasChart
                     // draw axis value at current step
                     DrawYAxisText(ctx, currentValue, currentPosition.Y);
                 }
-            });
+            }
         }
 
         /// <summary>

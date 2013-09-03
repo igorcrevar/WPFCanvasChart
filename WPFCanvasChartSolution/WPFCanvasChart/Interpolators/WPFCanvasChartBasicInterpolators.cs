@@ -14,13 +14,13 @@ namespace IgorCrevar.WPFCanvasChart.Interpolators
             this.formatString = formatString;
         }
 
-        public void Execute(double min, double max, int noOfSteps, Action<double> action)
+        public IEnumerable<double> GetSteps(double min, double max, int noOfSteps)
         {
             double valueStep = Math.Abs(max - min) / noOfSteps;
             double currentValue = min;
             for (int i = 0; i <= noOfSteps; ++i)
             {
-                action(currentValue);
+                yield return currentValue;
                 currentValue += valueStep;
             }
         }
@@ -38,14 +38,14 @@ namespace IgorCrevar.WPFCanvasChart.Interpolators
 
     public class WPFCanvasChartIntInterpolator : IWPFCanvasChartInterpolator
     {
-        public void Execute(double min, double max, int noOfSteps, Action<double> action)
+        public IEnumerable<double> GetSteps(double min, double max, int noOfSteps)
         {
             // greater zoom has more steps
             double stepDouble = (max - min) / noOfSteps + 0.5d;
             int step = Math.Max(1, (int)stepDouble);
             for (int i = (int)min; i <= (int)max; i += step)
             {
-                action(i);
+                yield return i;
             }
         }
 
