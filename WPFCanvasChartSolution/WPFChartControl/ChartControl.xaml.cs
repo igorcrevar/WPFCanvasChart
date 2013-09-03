@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using IgorCrevar.WPFChartControl.Model;
 using IgorCrevar.WPFChartControl.ViewModel;
+using IgorCrevar.WPFChartControl.Drawer;
 
 namespace IgorCrevar.WPFChartControl
 {
@@ -21,51 +22,67 @@ namespace IgorCrevar.WPFChartControl
         }
 
         // Dependency Property
-        public static readonly DependencyProperty ModelProperty =
-             DependencyProperty.Register("Model", typeof(ChartModel),
+        public static readonly DependencyProperty DrawerProperty =
+             DependencyProperty.Register("Drawer", typeof(AbstractChartDrawer),
              typeof(ChartControl), new FrameworkPropertyMetadata(null, OnPropertyChanged));
 
         private static void OnPropertyChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
         {
             ChartControl control = (ChartControl)source;
-            ChartModel model = (ChartModel)e.NewValue;
-            control.Update(model);
+            AbstractChartDrawer drawer = (AbstractChartDrawer)e.NewValue;
+            control.Update(drawer);
         }
 
-        public ChartModel Model
+        public AbstractChartDrawer Drawer
         {
             get
             {
-                return (ChartModel)GetValue(ModelProperty);
+                return (AbstractChartDrawer)GetValue(DrawerProperty);
             }
 
             set
             {
-                SetValue(ModelProperty, value);
+                SetValue(DrawerProperty, value);
             }
         }
 
-        private void Update(ChartModel model)
+        private void Update(AbstractChartDrawer drawer)
         {
-            if (model == null)
+            if (drawer == null)
             {
                 return;
             }
 
-            if (model.ChartDrawer == null)
+            if (drawer.Legend == null)
             {
-                throw new ArgumentNullException("ChartDrawer is null!");
+                throw new ArgumentNullException("Drawer.Legend is null. It must contains at least colors for lines, bars, etc depending on chart type");
             }
 
-            viewModel.Update(model);
-            model.ChartDrawer.Update(model, Canvas, HorizScroll, VertScroll);
+            if (drawer.Settings == null)
+            {
+                throw new ArgumentNullException("Drawer.Settings is null");
+            }
+
+            if (drawer.XAxisInterpolator == null)
+            {
+                throw new ArgumentNullException("Drawer.XAxisInterpolator is null");
+            }
+
+            if (drawer.YAxisInterpolator == null)
+            {
+                throw new ArgumentNullException("Drawer.YAxisInterpolator is null");
+            }
+
+
+            viewModel.Update(drawer);
+            drawer.Update(Canvas, HorizScroll, VertScroll);
         }
 
         public void Dispose()
         {
-            if (Model != null && Model.ChartDrawer != null)
+            if (Drawer != null)
             {
-                Model.ChartDrawer.Dispose();
+                Drawer.Dispose();
             }
         }
     }

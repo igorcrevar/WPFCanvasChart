@@ -47,6 +47,7 @@ namespace IgorCrevar.WPFCanvasChart
         private WPFCanvasChartSettings settings;
         private IWPFCanvasChartInterpolator yAxisInterpolator;
         private IWPFCanvasChartInterpolator xAxisInterpolator;
+        private bool isDisposed = false;
 
         /// <summary>
         /// Constructor
@@ -507,25 +508,30 @@ namespace IgorCrevar.WPFCanvasChart
 
         public void Dispose()
         {
-            drawer = null;
-            if (settings.HandleSizeChanged)
+            if (!isDisposed)
             {
-                canvas.SizeChanged -= Canvas_SizeChanged;
-            }
+                drawer = null;
+                if (settings.HandleSizeChanged)
+                {
+                    canvas.SizeChanged -= Canvas_SizeChanged;
+                }
 
-            canvas.MouseWheel -= Canvas_MouseWheel;
-            canvas.MouseMove -= Canvas_MouseMove;
-            canvas.MouseUp -= Canvas_MouseUp;
-            canvas.MouseDown -= Canvas_MouseDown;
-            canvas.Children.Clear();
-            if (xZoomEnabled)
-            {
-                horizScrollBar.ValueChanged -= HorizScrollBar_ValueChanged;
-            }
+                canvas.MouseWheel -= Canvas_MouseWheel;
+                canvas.MouseMove -= Canvas_MouseMove;
+                canvas.MouseUp -= Canvas_MouseUp;
+                canvas.MouseDown -= Canvas_MouseDown;
+                canvas.Children.Clear();
+                if (xZoomEnabled)
+                {
+                    horizScrollBar.ValueChanged -= HorizScrollBar_ValueChanged;
+                }
 
-            if (yZoomEnabled)
-            {
-                vertScrollBar.ValueChanged -= VertScrollBar_ValueChanged;
+                if (yZoomEnabled)
+                {
+                    vertScrollBar.ValueChanged -= VertScrollBar_ValueChanged;
+                }
+
+                isDisposed = true;
             }
         }
     }

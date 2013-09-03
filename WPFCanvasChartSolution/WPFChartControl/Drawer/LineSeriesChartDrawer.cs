@@ -20,13 +20,13 @@ namespace IgorCrevar.WPFChartControl.Drawer
             this.onMouseDown = onMouseDown;
         }
 
-        protected override void OnModelUpdate()
+        protected override void OnUpdate()
         {
-            if (chartPoints.Count != Model.Legend.Count)
+            if (chartPoints.Count != Legend.Count)
             {
                 throw new ArgumentException(string.Format(
-                    "chartPoints.Count = {0} and ChartModel instance Legend.Count = {1}. Lists must contains same number of elements",
-                    chartPoints.Count, Model.Legend.Count));
+                    "chartPoints.Count = {0} and Legend.Count = {1}. Lists must contains same number of elements",
+                    chartPoints.Count, Legend.Count));
             }
 
             Point min = new Point(double.MaxValue, double.MaxValue);
@@ -71,7 +71,7 @@ namespace IgorCrevar.WPFChartControl.Drawer
                     continue;
                 }
 
-                Pen pen = new Pen(new SolidColorBrush(Model.Legend[j].Color), lineTickness);
+                Pen pen = new Pen(new SolidColorBrush(Legend[j].Color), lineTickness);
                 pen.Freeze();
                 Point prevPoint = Chart.Point2ChartPoint(seriePoints[0]);
                 for (int i = 1; i < seriePoints.Count; ++i)

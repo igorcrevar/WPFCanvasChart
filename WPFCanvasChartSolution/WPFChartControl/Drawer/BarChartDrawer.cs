@@ -10,19 +10,21 @@ namespace IgorCrevar.WPFChartControl.Drawer
     public class BarChartDrawer : AbstractChartDrawer
     {
         private IList<Point> chartPoints;
+        private double minY;
 
         public BarChartDrawer(IList<Point> chartPoints)
         {
             this.chartPoints = chartPoints;
+            FixedYMin = double.NaN;
         }
 
-        protected override void OnModelUpdate()
+        protected override void OnUpdate()
         {
-            if (chartPoints.Count != Model.Legend.Count)
+            if (chartPoints.Count != Legend.Count)
             {
                 throw new ArgumentException(string.Format(
-                    "chartPoints.Count = {0} and ChartModel instance Legend.Count = {1}. Lists must contains same number of elements",
-                    chartPoints.Count, Model.Legend.Count));
+                    "chartPoints.Count = {0} and Legend.Count = {1}. Lists must contains same number of elements",
+                    chartPoints.Count, Legend.Count));
             }
 
             if (chartPoints.Count == 0)
@@ -48,7 +50,8 @@ namespace IgorCrevar.WPFChartControl.Drawer
                     max.Y += 1.0d;
                 }
 
-                Chart.SetMinMax(min.X - 1, max.X + 1, double.IsNaN(Model.FixedYMin) ? min.Y : Model.FixedYMin, max.Y);
+                minY = double.IsNaN(FixedYMin) || FixedYMin > min.Y ? min.Y : FixedYMin;
+                Chart.SetMinMax(min.X - 1, max.X + 1, minY, max.Y);
             }
 
             Chart.DrawChart();
@@ -61,7 +64,7 @@ namespace IgorCrevar.WPFChartControl.Drawer
                 return;
             }
 
-            var points = chartPoints.Select(i => Chart.Point2ChartPoint(i)).ToList();
+            var points = chartPoints.Select(i => Chart.Point2ChartPoint(i)).ToArray();
             double width = 0.0d;
             if (chartPoints.Count == 1)
             {
@@ -76,11 +79,11 @@ namespace IgorCrevar.WPFChartControl.Drawer
                 width = width * 2 / 3;
             }
 
-            double yStart = Chart.Point2ChartPoint(new Point(0.0, 0.0)).Y;
-            for (int i = 0; i < points.Count; ++i)
+            double yStart = Chart.Point2ChartPoint(new Point(0.0, minY)).Y;
+            for (int i = 0; i < points.Length; ++i)
             {
                 Point p = points[i];
-                Brush brush = new SolidColorBrush(Model.Legend[i].Color);
+                Brush brush = new SolidColorBrush(Legend[i].Color);
                 Pen pen = new Pen(brush, 1.0d);
                 ctx.DrawRectangle(brush, pen, new Rect(p.X - width / 2, p.Y, width, yStart - p.Y));
             }
@@ -89,5 +92,10 @@ namespace IgorCrevar.WPFChartControl.Drawer
         public override void OnChartMouseDown(double x, double y)
         {
         }
+
+        /// <summary>
+        /// set to NaN if you want minimum depends on points data, otherwise set fixed y min
+        /// </summary>
+        public double FixedYMin { get; set; }
     }
 }

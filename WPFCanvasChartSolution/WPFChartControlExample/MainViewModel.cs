@@ -12,9 +12,9 @@ namespace WPFChartControlExample
 {
     class MainViewModel : INotifyPropertyChanged
     {
-        class BarXAxisInterpolator : IWPFCanvasChartInterpolator
+        class CustomBarXAxisInterpolator : IWPFCanvasChartInterpolator
         {
-            public string Format(double value)
+            public virtual string Format(double value)
             {
                 return string.Empty;
             }
@@ -30,111 +30,140 @@ namespace WPFChartControlExample
             }
         }
 
-        private ChartModel barChartModel;
+        private AbstractChartDrawer barChartDrawer;
+        private AbstractChartDrawer lineSeriesChartDrawer;
+        private AbstractChartDrawer stackedBarChartDrawer;
 
         public MainViewModel()
         {
             var rnd = new Random();
-            BarChartModel = new ChartModel()
+            BarChartDrawer = new BarChartDrawer(new Point[]{
+                new Point(1.0d, rnd.Next(100)),
+                new Point(2.0d, rnd.Next(100)),
+                new Point(3.0d, rnd.Next(100)),
+                new Point(4.0d, rnd.Next(100)),
+            })
             {
                 HorizScrollVisibility = Visibility.Visible,
                 VertScrollVisibility = Visibility.Collapsed,
                 LegendVisibility = Visibility.Visible,
                 Settings = new WPFCanvasChartSettings(),
-                XAxisText = "Type of workers",
                 YAxisText = "Number of people",
                 YAxisInterpolator = new WPFCanvasChartFloatInterpolator(),
-                XAxisInterpolator = new BarXAxisInterpolator(),
-                Legend = new List<LegendItem>()
+                XAxisInterpolator = new CustomBarXAxisInterpolator(),
+                Legend = new LegendItem[]
                 {
                     new LegendItem(Colors.Blue, "Programmers"),
                     new LegendItem(Colors.Red, "Designers"),
                     new LegendItem(Colors.Yellow, "Admins"),
                     new LegendItem(Colors.Brown, "Management"),
                 },
-                ChartDrawer = new BarChartDrawer(new List<Point>
-                {
-                    new Point(1.0d, rnd.Next(100)),
-                    new Point(2.0d, rnd.Next(100)),
-                    new Point(3.0d, rnd.Next(100)),
-                    new Point(4.0d, rnd.Next(100)),
-                }),
                 FixedYMin = 0.0d,
             };
 
-            var serie1 = new List<Point>() 
+            var serie1 = new List<Point>();
+            var serie2 = new List<Point>();
+            for (int i = 0; i < rnd.Next(1000) + 1000; ++i)
             {
-                new Point(10.0d, -20.50d),
-                new Point(30.0d, 30.58d),
-                new Point(50.0d, 10.00d),
-            };
+                serie1.Add(new Point(i, rnd.NextDouble() * 200 - 100));
+                serie2.Add(new Point(i + 1, rnd.NextDouble() * 200 - 100));
+            }
 
-            var serie2 = new List<Point>() 
+            LineSeriesChartDrawer = new LineSeriesChartDrawer(new List<IList<Point>>{
+                serie1, serie2
+            })
             {
-                new Point(5.0d, 100.0d),
-                new Point(20.0d, 40.0d),
-                new Point(50.0d, 90.00d),
-            };
-            LineSeriesChartModel = new ChartModel()
-            {
-                HorizScrollVisibility = Visibility.Visible,
-                VertScrollVisibility = Visibility.Visible,
-                LegendVisibility = Visibility.Visible,
                 Settings = new WPFCanvasChartSettings(),
                 XAxisText = "Layer",
                 YAxisText = "Value",
                 YAxisInterpolator = new WPFCanvasChartFloatInterpolator(),
                 XAxisInterpolator = new WPFCanvasChartIntInterpolator(),
-                Legend = new List<LegendItem>()
+                Legend = new LegendItem[]
                 {
                     new LegendItem(Colors.Blue, "Something"),
                     new LegendItem(Colors.Red, "Else"),
-                },
-                ChartDrawer = new LineSeriesChartDrawer(new List<IList<Point>>()
+                },                
+            };
+
+            StackedBarChartDrawer = new StackedBarChartDrawer(new List<StackedBarItem>
+            {
+               new StackedBarItem(2007, new double[] { 50, 30, 20 }),
+               new StackedBarItem(2008, new double[] { 100, 0, 100 }),
+               new StackedBarItem(2009, new double[] { 40, 10, 30 }),
+               new StackedBarItem(2010, new double[] { 100, 50, 50 }),
+               new StackedBarItem(2011, new double[] { 80, 90, -10 }),
+               new StackedBarItem(2012, new double[] { 30, 20, 10 }),
+               new StackedBarItem(2013, new double[] { 20, 5, 15 }),
+            })
+            {
+                XAxisText = "Power",
+                YAxisText = "Year",
+                Settings = new WPFCanvasChartSettings(),
+                YAxisInterpolator = new WPFCanvasChartFloatInterpolator(),
+                XAxisInterpolator = new WPFCanvasChartIntInterpolator(),
+                Legend = new LegendItem[]
                 {
-                    serie1, serie2
-                }) 
+                    new LegendItem(Colors.Blue, "Active"),
+                    new LegendItem(Colors.Red, "Reactive"),
+                    new LegendItem(Colors.Yellow, "Total"),
+                },
+                FixedYMin = 0.0d,
             };
         }
 
-        public ChartModel BarChartModel
+        public AbstractChartDrawer BarChartDrawer
         {
             get
             {
-                return barChartModel;
+                return barChartDrawer;
             }
 
             set
             {
-                if (barChartModel != value)
+                if (barChartDrawer != value)
                 {
-                    barChartModel = value;
-                    OnPropertyChanged("BarChartModel");
+                    barChartDrawer = value;
+                    OnPropertyChanged("BarChartDrawer");
                 }
             }
         }
 
-        public ChartModel LineSeriesChartModel
+        public AbstractChartDrawer LineSeriesChartDrawer
         {
             get
             {
-                return lineSeriesChartModel;
+                return lineSeriesChartDrawer;
             }
 
             set
             {
-                if (lineSeriesChartModel != value)
+                if (lineSeriesChartDrawer != value)
                 {
-                    lineSeriesChartModel = value;
-                    OnPropertyChanged("LineSeriesChartModel");
+                    lineSeriesChartDrawer = value;
+                    OnPropertyChanged("LineSeriesChartDrawer");
+                }
+            }
+        }
+
+        public AbstractChartDrawer StackedBarChartDrawer
+        {
+            get
+            {
+                return stackedBarChartDrawer;
+            }
+
+            set
+            {
+                if (stackedBarChartDrawer != value)
+                {
+                    stackedBarChartDrawer = value;
+                    OnPropertyChanged("StackedBarChartDrawer");
                 }
             }
         }
 
         #region INotifyPropertyChanged part
         public event PropertyChangedEventHandler PropertyChanged;
-        private ChartModel lineSeriesChartModel;
-
         protected void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;

@@ -53,9 +53,9 @@
     </Compile>
     <Compile Include="Drawer\BarChartDrawer.cs" />
     <Compile Include="Drawer\LineSeriesChartDrawer.cs" />
+    <Compile Include="Drawer\StackedBarChartDrawer.cs" />
     <Compile Include="ViewModel\ChartViewModel.cs" />
     <Compile Include="Drawer\AbstractChartDrawer.cs" />
-    <Compile Include="Model\ChartModel.cs" />
     <Compile Include="Model\LegendItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

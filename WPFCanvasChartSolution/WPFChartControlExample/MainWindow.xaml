@@ -2,17 +2,21 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:chart="clr-namespace:IgorCrevar.WPFChartControl;assembly=WPFChartControl"
-        Title="MainWindow" Height="600" Width="800">
+        Title="MainWindow" Height="660" Width="880">
     <Grid Background="#DDDDDDDD">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="Bar Chart" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
-        <chart:ChartControl Grid.Row="1" Model="{Binding Path=BarChartModel}" Margin="0,0,0,30" MinWidth="100" MinHeight="100"/>
-        <TextBlock Grid.Row="2" Text="Line Series Chart" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
-        <chart:ChartControl Grid.Row="3" Model="{Binding Path=LineSeriesChartModel}" MinWidth="100" MinHeight="100"/>
+        <chart:ChartControl Grid.Row="1" Drawer="{Binding Path=BarChartDrawer}" Margin="0,0,0,30" MinWidth="100" MinHeight="100"/>
+        <TextBlock Grid.Row="2" Text="Stacked Bar Chart" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+        <chart:ChartControl Grid.Row="3" Drawer="{Binding Path=StackedBarChartDrawer}" Margin="0,0,0,30" MinWidth="100" MinHeight="100"/>
+        <TextBlock Grid.Row="4" Text="Line Series Chart" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+        <chart:ChartControl Grid.Row="5" Drawer="{Binding Path=LineSeriesChartDrawer}" MinWidth="100" MinHeight="100"/>
     </Grid>
 </Window>

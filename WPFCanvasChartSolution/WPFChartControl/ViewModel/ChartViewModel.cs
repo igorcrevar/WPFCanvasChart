@@ -3,6 +3,7 @@ using System.Windows;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 using IgorCrevar.WPFChartControl.Model;
+using IgorCrevar.WPFChartControl.Drawer;
 
 namespace IgorCrevar.WPFChartControl.ViewModel
 {
@@ -16,18 +17,21 @@ namespace IgorCrevar.WPFChartControl.ViewModel
         private ObservableCollection<LegendItem> legend = new ObservableCollection<LegendItem>();
         private Brush background;
 
-        public void Update(ChartModel model)
+        public void Update(AbstractChartDrawer drawer)
         {
-            XAxisText = model.XAxisText;
-            YAxisText = model.YAxisText;
-            HorizScrollVisibility = model.HorizScrollVisibility;
-            VertScrollVisibility = model.VertScrollVisibility;
-            LegendVisibility = model.LegendVisibility;
-            Background = model.Background;
+            XAxisText = drawer.XAxisText;
+            YAxisText = drawer.YAxisText;
+            HorizScrollVisibility = drawer.HorizScrollVisibility;
+            VertScrollVisibility = drawer.VertScrollVisibility;
+            LegendVisibility = drawer.LegendVisibility;
+            Background = drawer.Background;
             legend.Clear();
-            foreach (var it in model.Legend)
+            if (drawer.Legend != null)
             {
-                legend.Add(it);
+                foreach (var it in drawer.Legend)
+                {
+                    legend.Add(it);
+                }
             }
         }
 
