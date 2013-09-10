@@ -15,17 +15,22 @@ namespace IgorCrevar.WPFChartControl.Drawer
     /// </summary>
     public abstract class AbstractChartDrawer : IWPFCanvasChartDrawer, IDisposable
     {
-        private WPFCanvasChart.WPFCanvasChart chart = null;
+        private IWPFCanvasChartComponent chart = null;
 
         public AbstractChartDrawer()
         {
             Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DDDDDDDD"));
+            LegendWidth = double.NaN;
         }
 
         public void Update(Canvas canvas, ScrollBar horizScroll, ScrollBar vertScroll)
         {
             Dispose();
-            chart = new WPFCanvasChart.WPFCanvasChart(canvas,
+            if (chart == null)
+            {
+                chart = new WPFCanvasChartComponent(); // default if not specified
+            }
+            chart.Init(canvas,
                HorizScrollVisibility == System.Windows.Visibility.Visible ? horizScroll : null,
                VertScrollVisibility == System.Windows.Visibility.Visible ? vertScroll : null,
                this,
@@ -50,18 +55,32 @@ namespace IgorCrevar.WPFChartControl.Drawer
         #endregion Abstract Methods
 
         #region Properties
-        protected WPFCanvasChart.WPFCanvasChart Chart { get { return chart; } }
-         
+        public IWPFCanvasChartComponent Chart
+        {
+            get
+            {
+                return chart;
+            }
+
+            set
+            {
+                chart = value;
+            }
+        }
+
         public string XAxisText { get; set; }
         public string YAxisText { get; set; }
         public Visibility HorizScrollVisibility { get; set; }
         public Visibility VertScrollVisibility { get; set; }
-        public Visibility LegendVisibility { get; set; }
         public IList<LegendItem> Legend { get; set; }
         public Brush Background { get; set; }
         public WPFCanvasChartSettings Settings { get; set; }
         public IWPFCanvasChartInterpolator XAxisInterpolator { get; set; }
         public IWPFCanvasChartInterpolator YAxisInterpolator { get; set; }
+        /// <summary>
+        /// Put here 0.0 if you dont want legend, or double.NaN(default) if you want auto width
+        /// </summary>
+        public double LegendWidth { get; set; }
         #endregion
     }
 }

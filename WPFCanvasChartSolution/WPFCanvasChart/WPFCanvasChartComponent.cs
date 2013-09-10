@@ -13,7 +13,7 @@ using IgorCrevar.WPFCanvasChart.Interpolators;
 
 namespace IgorCrevar.WPFCanvasChart
 {
-    public class WPFCanvasChart : IDisposable
+    public class WPFCanvasChartComponent : IWPFCanvasChartComponent
     {
         protected double minX, maxX;
         protected double minY, maxY;
@@ -52,6 +52,13 @@ namespace IgorCrevar.WPFCanvasChart
         /// <summary>
         /// Constructor
         /// </summary>
+        public WPFCanvasChartComponent()
+        {
+        }
+         
+        /// <summary>
+        /// Init method
+        /// </summary>
         /// <param name="canvas">Canvas object</param>
         /// <param name="horizScrollBar">Horizontal ScrollBar object</param>
         /// <param name="vertScrollBar">Verical ScrollBar object. Can be null - that means vertical scroll is disabled</param>
@@ -59,7 +66,7 @@ namespace IgorCrevar.WPFCanvasChart
         /// <param name="settings">WPFCanvasChartSettings instance - settings for chart</param>
         /// <param name="xAxisInterpolator">value interpolator for x axis</param>
         /// <param name="yAxisInterpolator">value interpolator for y axis</param>
-        public WPFCanvasChart(Canvas canvas, ScrollBar horizScrollBar, ScrollBar vertScrollBar, IWPFCanvasChartDrawer drawer,
+        public void Init(Canvas canvas, ScrollBar horizScrollBar, ScrollBar vertScrollBar, IWPFCanvasChartDrawer drawer,
             WPFCanvasChartSettings settings, IWPFCanvasChartInterpolator xAxisInterpolator, IWPFCanvasChartInterpolator yAxisInterpolator)
         {
             this.canvas = canvas;

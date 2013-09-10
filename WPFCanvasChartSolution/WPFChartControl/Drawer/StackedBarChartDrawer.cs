@@ -44,6 +44,11 @@ namespace IgorCrevar.WPFChartControl.Drawer
 
         protected override void OnUpdate()
         {
+            if (Legend == null)
+            {
+                throw new ArgumentNullException("Legend is null. Can not be null for StackedBar");
+            }
+
             Point min = new Point(double.MaxValue, double.MaxValue);
             Point max = new Point(double.MinValue, double.MinValue);
             foreach (var v in values)
@@ -117,9 +122,12 @@ namespace IgorCrevar.WPFChartControl.Drawer
                 foreach (var yVal in yValues)
                 {
                     var yCoord = Chart.Point2ChartPoint(new Point(0.0d, yVal.Value)).Y;
-                    Brush brush = new SolidColorBrush(yVal.Color);
-                    Pen pen = new Pen(brush, 1.0d);
-                    ctx.DrawRectangle(brush, pen, new Rect(xCoord - width / 2, yCoord, width, yStart - yCoord));
+                    if (yStart - yCoord > 0.0d)
+                    {
+                        Brush brush = new SolidColorBrush(yVal.Color);
+                        Pen pen = new Pen(brush, 1.0d);
+                        ctx.DrawRectangle(brush, pen, new Rect(xCoord - width / 2, yCoord, width, yStart - yCoord));
+                    }
                     yStart = yCoord;
                 }
             }

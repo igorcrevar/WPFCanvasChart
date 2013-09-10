@@ -4,6 +4,8 @@ using System.Windows.Controls;
 using IgorCrevar.WPFChartControl.Model;
 using IgorCrevar.WPFChartControl.ViewModel;
 using IgorCrevar.WPFChartControl.Drawer;
+using IgorCrevar.WPFCanvasChart;
+using IgorCrevar.WPFCanvasChart.Interpolators;
 
 namespace IgorCrevar.WPFChartControl
 {
@@ -53,26 +55,20 @@ namespace IgorCrevar.WPFChartControl
                 return;
             }
 
-            if (drawer.Legend == null)
-            {
-                throw new ArgumentNullException("Drawer.Legend is null. It must contains at least colors for lines, bars, etc depending on chart type");
-            }
-
             if (drawer.Settings == null)
             {
-                throw new ArgumentNullException("Drawer.Settings is null");
+                drawer.Settings = new WPFCanvasChartSettings(); //default settings
             }
 
             if (drawer.XAxisInterpolator == null)
             {
-                throw new ArgumentNullException("Drawer.XAxisInterpolator is null");
+                drawer.XAxisInterpolator = new WPFCanvasChartIntInterpolator();
             }
 
             if (drawer.YAxisInterpolator == null)
             {
-                throw new ArgumentNullException("Drawer.YAxisInterpolator is null");
+                drawer.YAxisInterpolator = new WPFCanvasChartFloatInterpolator();
             }
-
 
             viewModel.Update(drawer);
             drawer.Update(Canvas, HorizScroll, VertScroll);

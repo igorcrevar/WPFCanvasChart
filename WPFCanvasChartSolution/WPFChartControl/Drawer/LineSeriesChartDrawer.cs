@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
+using IgorCrevar.WPFChartControl.Model;
 
 namespace IgorCrevar.WPFChartControl.Drawer
 {
@@ -20,8 +21,22 @@ namespace IgorCrevar.WPFChartControl.Drawer
             this.onMouseDown = onMouseDown;
         }
 
+        public LineSeriesChartDrawer(IList<Point> chartPoints, double lineTickness = 1.0d, Action<Point> onMouseDown = null)
+            : this(new List<IList<Point>>() { chartPoints }, lineTickness, onMouseDown)
+        {
+        }
+
         protected override void OnUpdate()
         {
+            if (Legend == null)
+            {
+                Legend = new List<LegendItem>();
+                for (int i = 0; i < chartPoints.Count; ++i)
+                {
+                    Legend.Add(new LegendItem(Colors.Black, string.Empty));
+                }
+            }
+
             if (chartPoints.Count != Legend.Count)
             {
                 throw new ArgumentException(string.Format(

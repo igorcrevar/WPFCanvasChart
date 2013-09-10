@@ -20,6 +20,15 @@ namespace IgorCrevar.WPFChartControl.Drawer
 
         protected override void OnUpdate()
         {
+            if (Legend == null)
+            {
+                Legend = new List<LegendItem>();
+                for (int i = 0; i < chartPoints.Count; ++i)
+                {
+                    Legend.Add(new LegendItem(Colors.Blue, string.Empty));
+                }
+            }
+
             if (chartPoints.Count != Legend.Count)
             {
                 throw new ArgumentException(string.Format(

@@ -16,6 +16,7 @@ namespace IgorCrevar.WPFChartControl.ViewModel
         private Visibility legendVisibility = Visibility.Collapsed;
         private ObservableCollection<LegendItem> legend = new ObservableCollection<LegendItem>();
         private Brush background;
+        private double legendWidth;
 
         public void Update(AbstractChartDrawer drawer)
         {
@@ -23,8 +24,9 @@ namespace IgorCrevar.WPFChartControl.ViewModel
             YAxisText = drawer.YAxisText;
             HorizScrollVisibility = drawer.HorizScrollVisibility;
             VertScrollVisibility = drawer.VertScrollVisibility;
-            LegendVisibility = drawer.LegendVisibility;
+            LegendVisibility = drawer.Legend != null && drawer.LegendWidth != 0.0d ? Visibility.Visible : Visibility.Collapsed;
             Background = drawer.Background;
+            LegendWidth = drawer.LegendWidth;
             legend.Clear();
             if (drawer.Legend != null)
             {
@@ -116,6 +118,23 @@ namespace IgorCrevar.WPFChartControl.ViewModel
                 {
                     legendVisibility = value;
                     OnPropertyChanged("LegendVisibility");
+                }
+            }
+        }
+
+        public double LegendWidth
+        {
+            get
+            {
+                return legendWidth;
+            }
+
+            set
+            {
+                if (legendWidth != value)
+                {
+                    legendWidth = value;
+                    OnPropertyChanged("LegendWidth");
                 }
             }
         }

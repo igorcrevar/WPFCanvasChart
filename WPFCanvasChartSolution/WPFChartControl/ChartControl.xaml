@@ -52,7 +52,7 @@
                        VerticalAlignment="Stretch" Name="VertScroll" />
 
         <ItemsControl  Grid.Row="0" Grid.RowSpan="3" Grid.Column="3" Visibility="{Binding Path=LegendVisibility, FallbackValue=Collapsed}"
-                  ItemsSource="{Binding Path=Legend}"
+                  ItemsSource="{Binding Path=Legend}" Width="{Binding Path=LegendWidth}"
                   ItemTemplate="{StaticResource legendTemplate}">
         </ItemsControl>
     </Grid>

@@ -27,7 +27,7 @@ namespace WpfApplication1
             None, Big, Small, Bar
         };
 
-        private WPFCanvasChart cc = null;
+        private IWPFCanvasChartComponent cc = null;
         private List<Point> pointsList = new List<Point>();
         private Pen pen = new Pen(Brushes.Red, 1);
         private Brush brush = Brushes.Red;
@@ -54,8 +54,8 @@ namespace WpfApplication1
                 settings.PenForAxis = new Pen((Brush)new BrushConverter().ConvertFromString("#CC000000"), 0.5);
                 xAxisInterpolator = new WPFCanvasChartIntInterpolator();
                 yAxisInterpolator = new WPFCanvasChartFloatInterpolator();
-                cc = new WPFCanvasChart(this.Canvas, HorizScroll, VertScroll, this, settings,
-                                        xAxisInterpolator, yAxisInterpolator);
+                cc = new WPFCanvasChartComponent();
+                cc.Init(this.Canvas, HorizScroll, VertScroll, this, settings, xAxisInterpolator, yAxisInterpolator);
                 cc.SetMinMax(-5, 5, 10, 20);
                 cc.DrawChart();
             };

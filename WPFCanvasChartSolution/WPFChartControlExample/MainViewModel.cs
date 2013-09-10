@@ -43,13 +43,10 @@ namespace WPFChartControlExample
                 new Point(4.0d, rnd.Next(100)),
             })
             {
-                HorizScrollVisibility = Visibility.Visible,
                 VertScrollVisibility = Visibility.Collapsed,
-                LegendVisibility = Visibility.Visible,
-                Settings = new WPFCanvasChartSettings(),
-                YAxisText = "Number of people",
-                YAxisInterpolator = new WPFCanvasChartFloatInterpolator(),
+                YAxisInterpolator = new WPFCanvasChartIntInterpolator(),
                 XAxisInterpolator = new WPFCanvasChartIntEmptyInterpolator(),
+                YAxisText = "Number of people",
                 Legend = new LegendItem[]
                 {
                     new LegendItem(Colors.Blue, "Programmers"),
@@ -58,6 +55,7 @@ namespace WPFChartControlExample
                     new LegendItem(Colors.Brown, "Management"),
                 },
                 FixedYMin = 0.0d,
+                LegendWidth = 120.0d,
             };
 
             var serie1 = new List<Point>();
@@ -70,19 +68,7 @@ namespace WPFChartControlExample
 
             LineSeriesChartDrawer = new LineSeriesChartDrawer(new List<IList<Point>>{
                 serie1, serie2
-            })
-            {
-                Settings = new WPFCanvasChartSettings(),
-                XAxisText = "Layer",
-                YAxisText = "Value",
-                YAxisInterpolator = new WPFCanvasChartFloatInterpolator(),
-                XAxisInterpolator = new WPFCanvasChartIntInterpolator(),
-                Legend = new LegendItem[]
-                {
-                    new LegendItem(Colors.Blue, "Something"),
-                    new LegendItem(Colors.Red, "Else"),
-                },                
-            };
+            });
 
             StackedBarChartDrawer = new StackedBarChartDrawer(new List<StackedBarItem>
             {
@@ -107,6 +93,7 @@ namespace WPFChartControlExample
                     new LegendItem(Colors.Yellow, "Total"),
                 },
                 FixedYMin = 0.0d,
+                LegendWidth = 120.0d,
             };
         }
 
