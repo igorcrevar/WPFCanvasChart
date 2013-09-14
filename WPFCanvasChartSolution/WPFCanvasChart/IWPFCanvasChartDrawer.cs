@@ -11,5 +11,6 @@ namespace IgorCrevar.WPFCanvasChart
     {
         void Draw(DrawingContext ctx);
         void OnChartMouseDown(double x, double y);
+        void OnChartMouseOver(double x, double y);
     }
 }

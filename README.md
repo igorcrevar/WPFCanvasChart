@@ -54,8 +54,6 @@ Also you can use WPFCanvasChartComponent directly (from WPFCanvasChart project)
 - draw call on WPFCanvasChart instance will draw chart(step above must be executed before drawing!)
 - IWPFCanvasChartDrawer method public void Draw(DrawingContext ctx) is used to draw actual graph
 - Inside public void Draw(DrawingContext ctx) use Point2ChartPoint to convert your actual value to chart point
-- Simple bar chart control is included as separate project(WPFBarChartControl). It provides easy and 
-customizable bar chart creation with legend. Look at WPFBarChartExample project for detailed explanation
 
 #### Note:
 Chart is fast if canvas used for charting is inside Viewbox(like in code snippet bellow). If canvas is inside some other container(for example grid like in second code snippet bellow. This is how chart is created inside chart control), than performances dramatically decrease. Why? I do not know yet.

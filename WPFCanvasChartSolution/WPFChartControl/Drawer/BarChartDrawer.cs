@@ -10,60 +10,10 @@ namespace IgorCrevar.WPFChartControl.Drawer
     public class BarChartDrawer : AbstractChartDrawer
     {
         private IList<Point> chartPoints;
-        private double minY;
-
+        
         public BarChartDrawer(IList<Point> chartPoints)
         {
             this.chartPoints = chartPoints;
-            FixedYMin = double.NaN;
-        }
-
-        protected override void OnUpdate()
-        {
-            if (Legend == null)
-            {
-                Legend = new List<LegendItem>();
-                for (int i = 0; i < chartPoints.Count; ++i)
-                {
-                    Legend.Add(new LegendItem(Colors.Blue, string.Empty));
-                }
-            }
-
-            if (chartPoints.Count != Legend.Count)
-            {
-                throw new ArgumentException(string.Format(
-                    "chartPoints.Count = {0} and Legend.Count = {1}. Lists must contains same number of elements",
-                    chartPoints.Count, Legend.Count));
-            }
-
-            if (chartPoints.Count == 0)
-            {
-                Chart.SetMinMax(0, 1, 0, 10);
-            }
-            else
-            {
-                Point min = chartPoints[0];
-                Point max = chartPoints[0];
-                for (int i = 1; i < chartPoints.Count; ++i)
-                {
-                    var p = chartPoints[i];
-                    min.X = Math.Min(min.X, p.X);
-                    min.Y = Math.Min(min.Y, p.Y);
-
-                    max.X = Math.Max(max.X, p.X);
-                    max.Y = Math.Max(max.Y, p.Y);
-                }
-
-                if (min.Y == max.Y)
-                {
-                    max.Y += 1.0d;
-                }
-
-                minY = double.IsNaN(FixedYMin) || FixedYMin > min.Y ? min.Y : FixedYMin;
-                Chart.SetMinMax(min.X - 1, max.X + 1, minY, max.Y);
-            }
-
-            Chart.DrawChart();
         }
 
         public override void Draw(DrawingContext ctx)
@@ -88,7 +38,7 @@ namespace IgorCrevar.WPFChartControl.Drawer
                 width = width * 2 / 3;
             }
 
-            double yStart = Chart.Point2ChartPoint(new Point(0.0, minY)).Y;
+            double yStart = Chart.Point2ChartPoint(new Point(0.0, MinMaxValue.minY)).Y;
             for (int i = 0; i < points.Length; ++i)
             {
                 Point p = points[i];
@@ -98,13 +48,41 @@ namespace IgorCrevar.WPFChartControl.Drawer
             }
         }
 
-        public override void OnChartMouseDown(double x, double y)
+        public override MinMax GetMinMax()
         {
+            MinMax minMax = new MinMax(true);
+            if (chartPoints.Count == 0)
+            {
+                return minMax;
+            }
+
+            foreach (var p in chartPoints)
+            {
+                minMax.Update(p, p);
+            }
+           
+            minMax.minX -= 1;
+            minMax.maxX += 1;
+            return minMax;
         }
 
-        /// <summary>
-        /// set to NaN if you want minimum depends on points data, otherwise set fixed y min
-        /// </summary>
-        public double FixedYMin { get; set; }
+        protected override void OnUpdate()
+        {
+            if (Legend == null)
+            {
+                Legend = new List<LegendItem>();
+                for (int i = 0; i < chartPoints.Count; ++i)
+                {
+                    Legend.Add(new LegendItem(Colors.Blue, string.Empty));
+                }
+            }
+
+            if (chartPoints.Count != Legend.Count)
+            {
+                throw new ArgumentException(string.Format(
+                    "chartPoints.Count = {0} and Legend.Count = {1}. Lists must contains same number of elements",
+                    chartPoints.Count, Legend.Count));
+            }
+        }
     }
 }

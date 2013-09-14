@@ -33,68 +33,23 @@ namespace IgorCrevar.WPFChartControl.Drawer
     public class StackedBarChartDrawer : AbstractChartDrawer
     {
         private IList<StackedBarItem> values;
-        private bool isMinSet = false;
-        private double minY;
-
+       
         public StackedBarChartDrawer(IList<StackedBarItem> values)
         {
             this.values = values;
-            FixedYMin = double.NaN;
         }
 
-        protected override void OnUpdate()
+        protected override void  OnUpdate()
         {
             if (Legend == null)
             {
                 throw new ArgumentNullException("Legend is null. Can not be null for StackedBar");
-            }
-
-            Point min = new Point(double.MaxValue, double.MaxValue);
-            Point max = new Point(double.MinValue, double.MinValue);
-            foreach (var v in values)
-            {
-                min.X = Math.Min(min.X, v.XValue);
-                max.X = Math.Max(max.X, v.XValue);
-                if (v.YValues.Count < 1 || v.YValues.Count != Legend.Count)
-                {
-                    throw new ArgumentException(string.Format(
-                        "StackedBarItem.YValues.Count = {0} and Legend.Count = {1}. Lists must contains same number of elements and > 0",
-                        v.YValues.Count, Legend.Count));
-                }
-
-                // fix colors
-                for (int i = 0; i < Legend.Count; ++i)
-                {
-                    v.YValues[i].Color = Legend[i].Color;
-                }
-
-                // sort
-                v.YValues.Sort((a, b) => a.Value.CompareTo(b.Value));
-
-                min.Y = Math.Min(min.Y, v.YValues[0].Value);
-                max.Y = Math.Max(max.Y, v.YValues[v.YValues.Count - 1].Value);
-            }
-
-            if (double.MinValue != max.X && double.MinValue != max.Y)
-            {
-                if (min.Y == max.Y)
-                {
-                    max.Y += 1.0d;
-                }
-
-                minY = double.IsNaN(FixedYMin) || FixedYMin > min.Y ? min.Y : FixedYMin;
-                Chart.SetMinMax(min.X - 1, max.X + 1, minY, max.Y);
-                isMinSet = true;
-            }
-            else
-            {
-                Chart.SetMinMax(0, 2, 0, 5);
-            }
+            } 
         }
 
         public override void Draw(System.Windows.Media.DrawingContext ctx)
         {
-            if (values.Count == 0 || !isMinSet)
+            if (values.Count == 0 || double.MinValue == MinMaxValue.maxX || double.MinValue == MinMaxValue.maxY)
             {
                 return;
             }
@@ -118,7 +73,7 @@ namespace IgorCrevar.WPFChartControl.Drawer
             {
                 var yValues = values[i].YValues;
                 double xCoord = xPoints[i];
-                double yStart = Chart.Point2ChartPoint(new Point(0.0, minY)).Y;
+                double yStart = Chart.Point2ChartPoint(new Point(0.0, MinMaxValue.minY)).Y;
                 foreach (var yVal in yValues)
                 {
                     var yCoord = Chart.Point2ChartPoint(new Point(0.0d, yVal.Value)).Y;
@@ -133,13 +88,37 @@ namespace IgorCrevar.WPFChartControl.Drawer
             }
         }
 
-        public override void OnChartMouseDown(double x, double y)
+        public override MinMax GetMinMax()
         {
-        }
+            MinMax minMax = new MinMax(true);
+            foreach (var v in values)
+            {
+                minMax.Update(v.XValue, v.XValue, double.MaxValue, double.MinValue);
+                if (v.YValues.Count < 1 || v.YValues.Count != Legend.Count)
+                {
+                    throw new ArgumentException(string.Format(
+                        "StackedBarItem.YValues.Count = {0} and Legend.Count = {1}. Lists must contains same number of elements and > 0",
+                        v.YValues.Count, Legend.Count));
+                }
 
-        /// <summary>
-        /// set to NaN if you want minimum depends on points data, otherwise set fixed y min
-        /// </summary>
-        public double FixedYMin { get; set; }
+                // fix colors
+                for (int i = 0; i < Legend.Count; ++i)
+                {
+                    v.YValues[i].Color = Legend[i].Color;
+                }
+
+                // sort
+                v.YValues.Sort((a, b) => a.Value.CompareTo(b.Value));
+                minMax.Update(double.MaxValue, double.MinValue, v.YValues[0].Value, v.YValues[v.YValues.Count - 1].Value);
+            }
+
+            if (double.MinValue != minMax.maxX && double.MinValue != minMax.maxY)
+            {
+                minMax.minX -= 1;
+                minMax.maxX += 1;
+            }
+
+            return minMax;
+        }
     }
 }

@@ -12,68 +12,16 @@ namespace IgorCrevar.WPFChartControl.Drawer
     {
         private IList<IList<Point>> chartPoints;
         private double lineTickness;
-        private Action<Point> onMouseDown;
-
-        public LineSeriesChartDrawer(IList<IList<Point>> chartPoints, double lineTickness = 1.0d, Action<Point> onMouseDown = null)
+        
+        public LineSeriesChartDrawer(IList<IList<Point>> chartPoints, double lineTickness = 1.0d)
         {
             this.chartPoints = chartPoints;
             this.lineTickness = lineTickness;
-            this.onMouseDown = onMouseDown;
         }
 
-        public LineSeriesChartDrawer(IList<Point> chartPoints, double lineTickness = 1.0d, Action<Point> onMouseDown = null)
-            : this(new List<IList<Point>>() { chartPoints }, lineTickness, onMouseDown)
+        public LineSeriesChartDrawer(IList<Point> chartPoints, double lineTickness = 1.0d)
+            : this(new List<IList<Point>>() { chartPoints }, lineTickness)
         {
-        }
-
-        protected override void OnUpdate()
-        {
-            if (Legend == null)
-            {
-                Legend = new List<LegendItem>();
-                for (int i = 0; i < chartPoints.Count; ++i)
-                {
-                    Legend.Add(new LegendItem(Colors.Black, string.Empty));
-                }
-            }
-
-            if (chartPoints.Count != Legend.Count)
-            {
-                throw new ArgumentException(string.Format(
-                    "chartPoints.Count = {0} and Legend.Count = {1}. Lists must contains same number of elements",
-                    chartPoints.Count, Legend.Count));
-            }
-
-            Point min = new Point(double.MaxValue, double.MaxValue);
-            Point max = new Point(double.MinValue, double.MinValue);
-            foreach (var serie in chartPoints)
-            {
-                foreach (var p in serie)
-                {
-                    min.X = Math.Min(min.X, p.X);
-                    min.Y = Math.Min(min.Y, p.Y);
-
-                    max.X = Math.Max(max.X, p.X);
-                    max.Y = Math.Max(max.Y, p.Y);
-                }
-            }
-
-            if (min.X == double.MaxValue)
-            {
-                Chart.SetMinMax(0, 10, 0, 10);
-            }
-            else
-            {
-                if (min.Y == max.Y)
-                {
-                    max.Y += 1.0d;
-                    min.Y -= 1.0d;
-                }
-
-                Chart.SetMinMax(min.X, max.X, min.Y, max.Y);
-            }
-
-            Chart.DrawChart();
         }
 
         public override void Draw(DrawingContext ctx)
@@ -98,11 +46,42 @@ namespace IgorCrevar.WPFChartControl.Drawer
             }
         }
 
-        public override void OnChartMouseDown(double x, double y)
+        public override MinMax GetMinMax()
         {
-            if (onMouseDown != null)
+            MinMax minMax = new MinMax(true);
+            foreach (var serie in chartPoints)
             {
-                onMouseDown(new Point(x, y));
+                foreach (var p in serie)
+                {
+                    minMax.Update(p, p);
+                }
+            }
+
+            if (minMax.minY == minMax.maxY)
+            {
+                minMax.maxY += 1.0d;
+                minMax.minY -= 1.0d;
+            }
+
+            return minMax;
+        }
+
+        protected override void OnUpdate()
+        {
+            if (Legend == null)
+            {
+                Legend = new List<LegendItem>();
+                for (int i = 0; i < chartPoints.Count; ++i)
+                {
+                    Legend.Add(new LegendItem(Colors.Black, string.Empty));
+                }
+            }
+
+            if (chartPoints.Count != Legend.Count)
+            {
+                throw new ArgumentException(string.Format(
+                    "chartPoints.Count = {0} and Legend.Count = {1}. Lists must contains same number of elements",
+                    chartPoints.Count, Legend.Count));
             }
         }
     }

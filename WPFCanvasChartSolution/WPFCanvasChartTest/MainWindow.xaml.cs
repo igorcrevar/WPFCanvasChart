@@ -195,5 +195,9 @@ namespace WpfApplication1
 
             Refresh();
         }
+
+        public void OnChartMouseOver(double x, double y)
+        {
+        }
     }
 }

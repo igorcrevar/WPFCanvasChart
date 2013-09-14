@@ -53,6 +53,7 @@
     </Compile>
     <Compile Include="Drawer\BarChartDrawer.cs" />
     <Compile Include="Drawer\LineSeriesChartDrawer.cs" />
+    <Compile Include="Drawer\MultiChartDrawer.cs" />
     <Compile Include="Drawer\StackedBarChartDrawer.cs" />
     <Compile Include="ViewModel\ChartViewModel.cs" />
     <Compile Include="Drawer\AbstractChartDrawer.cs" />

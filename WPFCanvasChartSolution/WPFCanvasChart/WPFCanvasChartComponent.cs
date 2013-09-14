@@ -47,7 +47,7 @@ namespace IgorCrevar.WPFCanvasChart
         private WPFCanvasChartSettings settings;
         private IWPFCanvasChartInterpolator yAxisInterpolator;
         private IWPFCanvasChartInterpolator xAxisInterpolator;
-        private bool isDisposed = false;
+        private bool isDisposed = true;
 
         /// <summary>
         /// Constructor
@@ -87,6 +87,7 @@ namespace IgorCrevar.WPFCanvasChart
 
             UpdateHostsSizes();
             InitCanvasHandlers();
+            this.isDisposed = false;
         }
 
         /// <summary>
@@ -179,9 +180,9 @@ namespace IgorCrevar.WPFCanvasChart
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
+            Point newPosition = e.GetPosition(canvas);
             if (isPanning)
             {
-                Point newPosition = e.GetPosition(canvas);
                 if (xZoomEnabled)
                 {
                     horizScrollBar.Value -= newPosition.X - mousePosition.X;
@@ -194,6 +195,9 @@ namespace IgorCrevar.WPFCanvasChart
 
                 mousePosition = newPosition;
             }
+
+            Point convertedPoint = Point2ChartPoint(newPosition);
+            drawer.OnChartMouseOver(convertedPoint.X, convertedPoint.Y);
         }
 
         private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)

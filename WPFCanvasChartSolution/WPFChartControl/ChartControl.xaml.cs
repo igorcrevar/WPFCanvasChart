@@ -12,15 +12,22 @@ namespace IgorCrevar.WPFChartControl
     /// <summary>
     /// Interaction logic for BarChart.xaml
     /// </summary>
-    public partial class ChartControl : UserControl, IDisposable
+    public partial class ChartControl : UserControl
     {
         private ChartViewModel viewModel;
-
+        
         public ChartControl()
         {
             InitializeComponent();
             this.viewModel = new ChartViewModel();
             this.MainGrid.DataContext = viewModel;
+            Dispatcher.ShutdownStarted += (sender, e) =>
+            {
+                if (Drawer != null && Drawer.Chart != null)
+                {
+                    Drawer.Chart.Dispose();
+                }
+            };
         }
 
         // Dependency Property
@@ -70,16 +77,22 @@ namespace IgorCrevar.WPFChartControl
                 drawer.YAxisInterpolator = new WPFCanvasChartFloatInterpolator();
             }
 
-            viewModel.Update(drawer);
-            drawer.Update(Canvas, HorizScroll, VertScroll);
-        }
-
-        public void Dispose()
-        {
-            if (Drawer != null)
+            if (drawer.Chart == null)
             {
-                Drawer.Dispose();
+                drawer.Chart = new WPFCanvasChartComponent();
             }
+
+            drawer.Chart.Dispose();
+            drawer.Chart.Init(Canvas,
+               drawer.HorizScrollVisibility == System.Windows.Visibility.Visible ? HorizScroll : null,
+               drawer.VertScrollVisibility == System.Windows.Visibility.Visible ? VertScroll : null,
+               drawer,
+               drawer.Settings,
+               drawer.XAxisInterpolator,
+               drawer.YAxisInterpolator);
+
+            viewModel.Update(drawer);
+            drawer.Update();
         }
     }
 }
