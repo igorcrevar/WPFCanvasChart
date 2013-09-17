@@ -10,18 +10,46 @@ namespace IgorCrevar.WPFChartControl.Drawer
 {
     public class LineSeriesChartDrawer : AbstractChartDrawer
     {
-        private IList<IList<Point>> chartPoints;
-        private double lineTickness;
-        
-        public LineSeriesChartDrawer(IList<IList<Point>> chartPoints, double lineTickness = 1.0d)
+        public struct DotsSettings
         {
-            this.chartPoints = chartPoints;
-            this.lineTickness = lineTickness;
+            public DotsSettings(Brush brush, Pen pen, double size, bool isEnabled = true)
+            {
+                DotBrush = brush;
+                DotBrush.Freeze();
+                DotPen = pen;
+                DotPen.Freeze();
+                Size = size;
+                IsEnabled = isEnabled;
+            }
+
+            public Brush DotBrush;
+            public Pen DotPen;
+            public double Size;
+            public bool IsEnabled;
         }
 
-        public LineSeriesChartDrawer(IList<Point> chartPoints, double lineTickness = 1.0d)
-            : this(new List<IList<Point>>() { chartPoints }, lineTickness)
+        private IList<IList<Point>> chartPoints;
+        public double LineTickness { get; set; }
+        public DotsSettings Dots { get; set; }
+        
+        public LineSeriesChartDrawer(IList<IList<Point>> chartPoints)
         {
+            this.chartPoints = chartPoints;
+            Dots = new DotsSettings(new SolidColorBrush(), new Pen(), 1.0d, false);
+            this.LineTickness = 1.0d;
+        }
+
+        public LineSeriesChartDrawer(IList<Point> chartPoints)
+            : this(new List<IList<Point>>() { chartPoints })
+        {
+        }
+
+        private void DrawDot(Point point, DrawingContext ctx)
+        {
+            if (Dots.IsEnabled)
+            {
+                ctx.DrawEllipse(Dots.DotBrush, Dots.DotPen, point, Dots.Size, Dots.Size);
+            }
         }
 
         public override void Draw(DrawingContext ctx)
@@ -34,14 +62,16 @@ namespace IgorCrevar.WPFChartControl.Drawer
                     continue;
                 }
 
-                Pen pen = new Pen(new SolidColorBrush(Legend[j].Color), lineTickness);
+                Pen pen = new Pen(new SolidColorBrush(Legend[j].Color), LineTickness);
                 pen.Freeze();
                 Point prevPoint = Chart.Point2ChartPoint(seriePoints[0]);
+                DrawDot(prevPoint, ctx);
                 for (int i = 1; i < seriePoints.Count; ++i)
                 {
                     var currPoint = Chart.Point2ChartPoint(seriePoints[i]);
                     ctx.DrawLine(pen, prevPoint, currPoint);
                     prevPoint = currPoint;
+                    DrawDot(prevPoint, ctx);
                 }
             }
         }
